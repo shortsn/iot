@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Net.Http;
 using Windows.ApplicationModel.Background;
-
+using System.Threading.Tasks;
 
 namespace TestApp
 {
@@ -60,12 +60,22 @@ namespace TestApp
 
       // Navigation to second line
       lcd.gotoxy(0, 1);
-
       // Here is printed string
       lcd.prints("gentlemans!!!1");
 
       // Here is printed our new symbol (emoticon)
       lcd.printSymbol(0x00);
+
+      lcd.gotoxy(0, 1);
+      lcd.prints("                ");
+
+      int x = 0;
+
+      while (true) {
+        Task.Delay(1000).Wait();
+        lcd.gotoxy(0, 1);
+        lcd.prints(x++.ToString());
+      }
       
     }
   }
