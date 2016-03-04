@@ -90,7 +90,7 @@ namespace TestApp {
         ReadADC();
         LightLED();
 
-        Task.Delay(250).Wait();
+        Task.Delay(1000).Wait();
         lcd.gotoxy(0, 1);
         lcd.prints(x++.ToString());
       }
@@ -104,10 +104,8 @@ namespace TestApp {
     private async Task InitSPI() {
 
       var settings = new SpiConnectionSettings(SPI_CHIP_SELECT_LINE);
-      settings.ClockFrequency = 1000000;   /* 0.5MHz clock rate                                        */
+      settings.ClockFrequency = 500000;   /* 0.5MHz clock rate                                        */
       settings.Mode = SpiMode.Mode0;      /* The ADC expects idle-low clock polarity so we use Mode0  */
-      settings.SharingMode = SpiSharingMode.Exclusive;
-
 
       string spiAqs = SpiDevice.GetDeviceSelector(SPI_CONTROLLER_NAME);
       var deviceInfo = await DeviceInformation.FindAllAsync(spiAqs);
@@ -145,10 +143,10 @@ namespace TestApp {
     }
 
     public void ReadADC() {
+      var channel = 0;
       byte[] readBuffer = new byte[3]; /* Buffer to hold read data*/
-      byte[] writeBuffer = new byte[3] { 0x01, 0x80, 0 };
-
-
+      byte[] writeBuffer = new byte[3] { 1, (byte)(8 + channel << 4), 0 };
+      
       SpiADC.TransferFullDuplex(writeBuffer, readBuffer); /* Read data from the ADC                           */
       adcValue = convertToInt(readBuffer);
 
