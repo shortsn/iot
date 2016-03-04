@@ -10,6 +10,7 @@ using Windows.Devices.Enumeration;
 using Windows.UI.Xaml;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Devices.Gpio;
+using Microsoft.IoT.Devices.Adc;
 
 namespace TestApp {
   public sealed class StartupTask : IBackgroundTask {
@@ -38,6 +39,11 @@ namespace TestApp {
     private int adcValue;
 
     public void Run(IBackgroundTaskInstance taskInstance) {
+
+      using (var adc = new MCP3008 { ChipSelectLine = SPI_CHIP_SELECT_LINE, ControllerName = SPI_CONTROLLER_NAME }) {
+        adc.AcquireChannel(0);
+        var value = adc.ReadValue(0);
+      }
 
       InitAll().Wait();
 

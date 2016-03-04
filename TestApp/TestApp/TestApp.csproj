@@ -21,7 +21,7 @@
     <PackageCertificateKeyFile>TestApp_TemporaryKey.pfx</PackageCertificateKeyFile>
     <AppxPackage>true</AppxPackage>
     <ContainsStartupTask>true</ContainsStartupTask>
-    <PackageCertificateThumbprint>147777375CCF99371D33CA1285D813F9C194A3B8</PackageCertificateThumbprint>
+    <PackageCertificateThumbprint>1F512D983806ADE81CFD64DA62D1257747A12585</PackageCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|ARM'">
     <DebugSymbols>true</DebugSymbols>
