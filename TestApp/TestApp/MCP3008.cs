@@ -32,7 +32,7 @@ namespace TestApp {
 
     public int ReadValue(byte channel) {
       byte[] read_buffer = new byte[3];
-      byte[] write_buffer = new byte[3] { 1, (byte)(8 + channel << 4), 0 };
+      byte[] write_buffer = new byte[3] { 1, Convert.ToByte(8 + channel << 4), 0 };
       _spi_port.TransferFullDuplex(write_buffer, read_buffer);
       return convertToInt(read_buffer);
     }

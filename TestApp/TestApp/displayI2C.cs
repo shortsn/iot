@@ -63,7 +63,7 @@ namespace TestApp {
       PulseEnable(0);
       PulseEnable(Convert.ToByte((1 << _D7) | (Convert.ToByte(turnOnDisplay) << _D6) | (Convert.ToByte(turnOnCursor) << _D5) | (Convert.ToByte(blinkCursor) << _D4)));
 
-      ClearScreen();
+      Clear();
 
       PulseEnable(0);
       PulseEnable(Convert.ToByte((1 << _D6) | (Convert.ToByte(cursorDirection) << _D5) | (Convert.ToByte(textShift) << _D4)));
@@ -86,32 +86,35 @@ namespace TestApp {
     }
 
     public void PrintChar(char letter) {
-      Write(Convert.ToByte(letter), 1);
+      SendData(Convert.ToByte(letter));
     }
-    
-    public void GoToPosition(byte column, byte row) {
+
+    public void PrintSymbol(byte address) {
+      SendData(address);
+    }
+
+    public void CreateChar(byte address, byte[] data) {
+      SendCommand(Convert.ToByte(0x40 | (address << 3)));
+      for (var i = 0; i < data.Length; i++) {
+        SendData(data[i]);
+      }
+      Clear();
+    }
+
+    public void SetCursor(byte column, byte row) {
       var command = Convert.ToByte(column | _line_address[row] | (1 << LCD_WRITE));
       SendCommand(command);
     }
     
-    public void SendData(byte data) {
-      Write(data, 1);
-    }
-
-    public void SendCommand(byte data) {
-      Write(data, 0);
-    }
-
-    public void ClearScreen() {
+    public void Clear() {
       PulseEnable(0);
       PulseEnable(Convert.ToByte((1 << _D4)));
-      //Task.Delay(5).Wait();
+      Task.Delay(5).Wait();
     }
 
-    public void Write(byte data, byte Rs) {
+    private void Write(byte data, byte Rs) {
       PulseEnable(Convert.ToByte((data & 0xf0) | (Rs << _RS)));
       PulseEnable(Convert.ToByte((data & 0x0f) << 4 | (Rs << _RS)));
-      //Task.Delay(5).Wait(); //In case of problem with displaying wrong characters uncomment this part
     }
 
     private void PulseEnable(byte data) {
@@ -120,24 +123,20 @@ namespace TestApp {
       }
       _i2c_port.Write(new byte[] { Convert.ToByte(data | (1 << _EN) | (_back_light << _BL)) }); // Enable bit HIGH
       _i2c_port.Write(new byte[] { Convert.ToByte(data | (_back_light << _BL)) }); // Enable bit LOW
-      //Task.Delay(2).Wait(); //In case of problem with displaying wrong characters uncomment this part
     }
 
-    public void CreateSymbol(byte[] data, byte address) {
-      SendCommand(Convert.ToByte(0x40 | (address << 3)));
-      for (var i = 0; i < data.Length; i++) {
-        SendData(data[i]);
-      }
-      ClearScreen();
+    private void SendData(byte data) {
+      Write(data, 1);
     }
 
-    public void PrintSymbol(byte address) {
-      SendData(address);
+    private void SendCommand(byte data) {
+      Write(data, 0);
     }
-    
+   
     private void Dispose(bool disposing) {
       if (!_disposed) {
         if (disposing) {
+          Clear();
           _i2c_port.Dispose();
         }
         _disposed = true;

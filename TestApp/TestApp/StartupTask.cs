@@ -16,7 +16,7 @@ namespace TestApp {
     private GpioPin ledPin;
 
     public void Run(IBackgroundTaskInstance taskInstance) {
-      InitGpio();
+      //InitGpio();
 
       using (var mcp3008 = MCP3008.Connect(SPI_CHIP_SELECT_LINE, SPI_CONTROLLER_NAME).Result) {
         using (var display = DisplayI2C.Connect(DEVICE_I2C_ADDRESS, I2C_CONTROLLER_NAME).Result) {
@@ -32,24 +32,30 @@ namespace TestApp {
           // 0x0E => 01110
           // 0x00 => 00000
           // 0x00 => 00000 
+          display.CreateChar(0x00, new byte[] { 0x00, 0x00, 0x0A, 0x00, 0x11, 0x0E, 0x00, 0x00 });
 
-          display.ClearScreen();
-          display.BacklightOff();
+          //display.ClearScreen();
+          //display.BacklightOff();
 
-          Task.Delay(2000).Wait();
-          display.BacklightOn();
+          //display.PrintSymbol(0x00);
 
-          display.CreateSymbol(new byte[] { 0x00, 0x00, 0x0A, 0x00, 0x11, 0x0E, 0x00, 0x00 }, 0x00);
-          display.PrintString("Good morning,");
-          display.PrintSymbol(0x00);
-          display.GoToPosition(0, 1);
+          //Task.Delay(2000).Wait();
+          //display.BacklightOn();
 
-          while (true) {
-            var value = mcp3008.ReadValue(0);
-            System.Diagnostics.Debug.WriteLine($"{ Math.Round(value / 102.4, 0, MidpointRounding.ToEven)}");
-            LightLED(value);
-            display.GoToPosition(0, 1);
-            display.PrintString($"Value: {value} ");
+          var channel0 = 0;
+          var channel1 = 0;
+
+          while ((channel0 + channel1) < 20) {
+            display.SetCursor(0, 0);
+            channel0 = Convert.ToInt16(mcp3008.ReadValue(0) / 102.4);
+            display.PrintString($"Channel 1:{ channel0 }  ");
+
+            //LightLED(value);
+
+            display.SetCursor(0, 1);
+            channel1 = Convert.ToInt16(mcp3008.ReadValue(1) / 102.4);
+            display.PrintString($"Channel 2:{ channel1 }  ");
+
             Task.Delay(500).Wait();
           }
         }
