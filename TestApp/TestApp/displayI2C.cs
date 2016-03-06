@@ -69,12 +69,12 @@ namespace TestApp {
       PulseEnable(Convert.ToByte((1 << _D6) | (Convert.ToByte(cursorDirection) << _D5) | (Convert.ToByte(textShift) << _D4)));
     }
 
-    public void TurnOnBacklight() {
+    public void BacklightOn() {
       _back_light = 0x01;
       SendCommand(0x00);
     }
 
-    public void TurnOffBacklight() {
+    public void BacklightOff() {
       _back_light = 0x00;
       SendCommand(0x00);
     }

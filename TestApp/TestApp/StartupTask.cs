@@ -33,6 +33,12 @@ namespace TestApp {
           // 0x00 => 00000
           // 0x00 => 00000 
 
+          display.ClearScreen();
+          display.BacklightOff();
+
+          Task.Delay(2000).Wait();
+          display.BacklightOn();
+
           display.CreateSymbol(new byte[] { 0x00, 0x00, 0x0A, 0x00, 0x11, 0x0E, 0x00, 0x00 }, 0x00);
           display.PrintString("Good morning,");
           display.PrintSymbol(0x00);
@@ -43,7 +49,7 @@ namespace TestApp {
             System.Diagnostics.Debug.WriteLine($"{ Math.Round(value / 102.4, 0, MidpointRounding.ToEven)}");
             LightLED(value);
             display.GoToPosition(0, 1);
-            display.PrintString($"Value: {value}");
+            display.PrintString($"Value: {value} ");
             Task.Delay(500).Wait();
           }
         }
