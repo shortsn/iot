@@ -14,16 +14,12 @@ namespace TestApp {
 
     private const int LED_PIN = 4;
     private GpioPin ledPin;
-
-    private const string SPI_CONTROLLER_NAME = "SPI0";
-    private const int SPI_CHIP_SELECT_LINE = 0;
-    private SpiDevice SpiADC;
-
+    
     private int adcValue;
 
     public void Run(IBackgroundTaskInstance taskInstance) {
-      
-      InitAll().Wait();
+
+      InitGpio();
 
       // Here is I2C bus and Display itself initialized.
       //
@@ -66,6 +62,8 @@ namespace TestApp {
 
       int x = 0;
 
+      var mcp_3008 = MCP3008.Connect(SPI_CHIP_SELECT_LINE, SPI_CONTROLLER_NAME).Result;
+
       while (true) {
         ReadADC();
         LightLED();
@@ -75,24 +73,7 @@ namespace TestApp {
         lcd.PrintString(x++.ToString());
       }
     }
-
-    private async Task InitAll() {
-      InitGpio();         /* Initialize GPIO to toggle the LED                          */
-      await InitSPI();    /* Initialize the SPI bus for communicating with the ADC      */
-    }
-
-    private async Task InitSPI() {
-
-      var settings = new SpiConnectionSettings(SPI_CHIP_SELECT_LINE);
-      settings.ClockFrequency = 500000;   /* 0.5MHz clock rate                                        */
-      settings.Mode = SpiMode.Mode0;      /* The ADC expects idle-low clock polarity so we use Mode0  */
-
-      string spiAqs = SpiDevice.GetDeviceSelector(SPI_CONTROLLER_NAME);
-      var deviceInfo = await DeviceInformation.FindAllAsync(spiAqs);
-      SpiADC = await SpiDevice.FromIdAsync(deviceInfo[0].Id, settings);
-
-    }
-
+    
     private void InitGpio() {
       var gpio = GpioController.GetDefault();
 
@@ -132,13 +113,6 @@ namespace TestApp {
 
       System.Diagnostics.Debug.WriteLine($"{ Math.Round(adcValue/102.4, 0, MidpointRounding.ToEven)}");
     }
-
-    public int convertToInt([ReadOnlyArray] byte[] data) {
-      int result = 0;
-      result = data[1] & 0x03;
-      result <<= 8;
-      result += data[2];
-      return result;
-    }
+    
   }
 }
