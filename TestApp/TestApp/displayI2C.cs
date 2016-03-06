@@ -9,252 +9,180 @@
  *  Git: https://github.com/DzeryCZ/Character-LCD-over-I2C
 **/
 
-
-
 using System;
 using System.Threading.Tasks;
 using Windows.Devices.Enumeration;
 using Windows.Devices.I2c;
 
 namespace TestApp {
-  class displayI2C
-    {
+  internal sealed class DisplayI2C {
 
-        private const byte LCD_WRITE = 0x07;
+    private const byte LCD_WRITE = 0x07;
 
-        private byte _D4;
-        private byte _D5;
-        private byte _D6;
-        private byte _D7;
-        private byte _En;
-        private byte _Rw;
-        private byte _Rs;
-        private byte _Bl;
+    private readonly byte _D4;
+    private readonly byte _D5;
+    private readonly byte _D6;
+    private readonly byte _D7;
+    private readonly byte _EN;
+    private readonly byte _RW;
+    private readonly byte _RS;
+    private readonly byte _BL;
 
-        private byte[] _LineAddress = new byte[] { 0x00, 0x40 };
+    private readonly byte[] _line_address = new byte[] { 0x00, 0x40 };
 
-        private byte _backLight = 0x01;
+    private byte _back_light = 0x01;
 
-        private I2cDevice _i2cPortExpander;
+    private readonly I2cDevice _i2c_port;
 
-
-        public displayI2C(byte deviceAddress, string controllerName, byte Rs, byte Rw, byte En, byte D4, byte D5, byte D6, byte D7, byte Bl, byte[] LineAddress) : this(deviceAddress, controllerName, Rs, Rw, En, D4, D5, D6, D7, Bl)
-        {
-            this._LineAddress = LineAddress;
-        }
-
-
-        public displayI2C(byte deviceAddress, string controllerName, byte Rs, byte Rw, byte En, byte D4, byte D5, byte D6, byte D7, byte Bl) 
-        {
-            // Configure pins
-            this._Rs = Rs;
-            this._Rw = Rw;
-            this._En = En;
-            this._D4 = D4;
-            this._D5 = D5;
-            this._D6 = D6;
-            this._D7 = D7;
-            this._Bl = Bl;
-
-            // It's async method, so we have to wait
-            Task.Run(() => this.startI2C(deviceAddress, controllerName)).Wait();
-        }
-               
-
-
-        /**
-        * Start I2C Communication
-        **/
-        public async void startI2C(byte deviceAddress, string controllerName)
-        {
-            try
-            {
-                var i2cSettings = new I2cConnectionSettings(deviceAddress);
-                i2cSettings.BusSpeed = I2cBusSpeed.FastMode;
-                string deviceSelector = I2cDevice.GetDeviceSelector(controllerName);
-                var i2cDeviceControllers = await DeviceInformation.FindAllAsync(deviceSelector);
-                this._i2cPortExpander = await I2cDevice.FromIdAsync(i2cDeviceControllers[0].Id, i2cSettings);
-            }
-            catch (Exception e)
-            {
-                System.Diagnostics.Debug.WriteLine("Exception: {0}", e.Message);
-                return;
-            }
-        }
-
-
-        /**
-        * Initialization
-        **/
-        public void init(bool turnOnDisplay = true, bool turnOnCursor = false, bool blinkCursor = false, bool cursorDirection = true, bool textShift = false)
-        {
-            //Task.Delay(100).Wait();
-            //pulseEnable(Convert.ToByte((turnOnBacklight << 3)));
-
-            /* Init sequence */
-            Task.Delay(100).Wait();
-            pulseEnable(Convert.ToByte((1 << this._D5) | (1 << this._D4)));
-            Task.Delay(5).Wait();
-            pulseEnable(Convert.ToByte((1 << this._D5) | (1 << this._D4)));
-            Task.Delay(5).Wait();
-            pulseEnable(Convert.ToByte((1 << this._D5) | (1 << this._D4)));
-
-            /*  Init 4-bit mode */
-            pulseEnable(Convert.ToByte((1 << this._D5)));
-
-            /* Init 4-bit mode + 2 line */
-            pulseEnable(Convert.ToByte((1 << this._D5)));
-            pulseEnable(Convert.ToByte((1 << this._D7)));
-
-            /* Turn on display, cursor */
-            pulseEnable(0);
-            pulseEnable(Convert.ToByte((1 << this._D7) | (Convert.ToByte(turnOnDisplay) << this._D6) | (Convert.ToByte(turnOnCursor) << this._D5) | (Convert.ToByte(blinkCursor) << this._D4)));
-
-            this.clrscr();
-
-            pulseEnable(0);
-            pulseEnable(Convert.ToByte((1 << this._D6) | (Convert.ToByte(cursorDirection) << this._D5) | (Convert.ToByte(textShift) << this._D4)));
-        }
-
-
-        /**
-        * Turn the backlight ON.
-        **/
-        public void turnOnBacklight()
-        {
-            this._backLight = 0x01;
-            this.sendCommand(0x00);
-        }
-
-
-        /**
-        * Turn the backlight OFF.
-        **/
-        public void turnOffBacklight()
-        {
-            this._backLight = 0x00;
-            this.sendCommand(0x00);
-        }
-
-
-        /**
-        * Can print string onto display
-        **/
-        public void prints(string text)
-        {
-            for (int i = 0; i < text.Length; i++)
-            {
-                this.printc(text[i]);
-            }
-        }
-
-
-        /**
-        * Print single character onto display
-        **/
-        public void printc(char letter)
-        {
-            try {
-                this.write(Convert.ToByte(letter), 1);
-            }
-            catch (Exception e)
-            {
-
-            }
-        }
-
-
-        /**
-        * skip to second line
-        **/
-        public void gotoSecondLine()
-        {
-            this.sendCommand(0xc0);
-        }
-
-
-        /**
-        * goto X and Y 
-        **/
-        public void gotoxy(byte x, byte y)
-        {
-            this.sendCommand( Convert.ToByte(x | _LineAddress[y] | (1 << LCD_WRITE)) );
-        }
-
-
-        /**
-        * Send data to display
-        **/
-        public void sendData(byte data)
-        {
-            this.write(data, 1);
-        }
-
-
-        /**
-        * Send command to display
-        **/
-        public void sendCommand(byte data)
-        {
-            this.write(data, 0);
-        }
-
-
-        /**
-        * Clear display and set cursor at start of the first line
-        **/
-        public void clrscr()
-        {
-            pulseEnable(0);
-            pulseEnable(Convert.ToByte((1 << this._D4)));
-            Task.Delay(5).Wait();
-        }
-
-
-        /**
-        * Send pure data to display
-        **/
-        public void write(byte data, byte Rs)
-        {
-            pulseEnable(Convert.ToByte((data & 0xf0) | (Rs << this._Rs)));
-            pulseEnable(Convert.ToByte((data & 0x0f) << 4 | (Rs << this._Rs)));
-            //Task.Delay(5).Wait(); //In case of problem with displaying wrong characters uncomment this part
-        }
-
-
-        /**
-        * Create falling edge of "enable" pin to write data/inctruction to display
-        */
-        private void pulseEnable(byte data)
-        {
-            this._i2cPortExpander.Write(new byte[] { Convert.ToByte(data | (1 << this._En) | (this._backLight << this._Bl)) }); // Enable bit HIGH
-            this._i2cPortExpander.Write(new byte[] { Convert.ToByte(data | (this._backLight << this._Bl)) }); // Enable bit LOW
-            //Task.Delay(2).Wait(); //In case of problem with displaying wrong characters uncomment this part
-        }
-
-
-        /**
-        * Save custom symbol to CGRAM
-        **/
-        public void createSymbol(byte[] data, byte address)
-        {
-            this.sendCommand( Convert.ToByte(0x40 | (address << 3)));
-            for(var i = 0; i < data.Length; i++)
-            {
-                this.sendData(data[i]);
-            }
-            this.clrscr();
-        }
-
-
-        /**
-        * Print custom symbol
-        **/
-        public void printSymbol(byte address)
-        {
-            this.sendData(address);
-        }
-
-
+    public DisplayI2C(I2cDevice i2c_port, byte RS, byte RW, byte EN, byte D4, byte D5, byte D6, byte D7, byte BL) {
+      _RS = RS;
+      _RW = RW;
+      _EN = EN;
+      _D4 = D4;
+      _D5 = D5;
+      _D6 = D6;
+      _D7 = D7;
+      _BL = BL;
+      _i2c_port = i2c_port;
     }
+
+    public async static Task<DisplayI2C> Connect(byte deviceAddress, string controllerName, byte Rs = 0x00, byte Rw = 0x01, byte En = 0x02, byte D4 = 0x04, byte D5 = 0x05, byte D6 = 0x06, byte D7 = 0x07, byte Bl = 0x03) {
+      var i2c = await StartI2C(deviceAddress, controllerName).ConfigureAwait(false);
+      return new DisplayI2C(i2c, Rs, Rw, En, D4, D5, D6, D7, Bl);
+    }
+
+    /**
+    * Start I2C Communication
+    **/
+    private async static Task<I2cDevice> StartI2C(byte device_address, string controller_name) {
+      var i2c_settings = new I2cConnectionSettings(device_address);
+      i2c_settings.BusSpeed = I2cBusSpeed.FastMode;
+      var device_selector = I2cDevice.GetDeviceSelector(controller_name);
+      var i2c_device_controllers = await DeviceInformation.FindAllAsync(device_selector);
+      return await I2cDevice.FromIdAsync(i2c_device_controllers[0].Id, i2c_settings);
+    }
+
+    /**
+    * Initialization
+    **/
+    public void Initialize(bool turnOnDisplay = true, bool turnOnCursor = false, bool blinkCursor = false, bool cursorDirection = true, bool textShift = false) {
+      /* Init sequence */
+      PulseEnable(Convert.ToByte((1 << _D5) | (1 << _D4)));
+      PulseEnable(Convert.ToByte((1 << _D5) | (1 << _D4)));
+      PulseEnable(Convert.ToByte((1 << _D5) | (1 << _D4)));
+
+      /*  Init 4-bit mode */
+      PulseEnable(Convert.ToByte((1 << _D5)));
+
+      /* Init 4-bit mode + 2 line */
+      PulseEnable(Convert.ToByte((1 << _D5)));
+      PulseEnable(Convert.ToByte((1 << _D7)));
+
+      /* Turn on display, cursor */
+      PulseEnable(0);
+      PulseEnable(Convert.ToByte((1 << _D7) | (Convert.ToByte(turnOnDisplay) << _D6) | (Convert.ToByte(turnOnCursor) << _D5) | (Convert.ToByte(blinkCursor) << _D4)));
+
+      ClearScreen();
+
+      PulseEnable(0);
+      PulseEnable(Convert.ToByte((1 << _D6) | (Convert.ToByte(cursorDirection) << _D5) | (Convert.ToByte(textShift) << _D4)));
+    }
+
+    /**
+    * Turn the backlight ON.
+    **/
+    public void TurnOnBacklight() {
+      _back_light = 0x01;
+      SendCommand(0x00);
+    }
+
+    /**
+    * Turn the backlight OFF.
+    **/
+    public void TurnOffBacklight() {
+      _back_light = 0x00;
+      SendCommand(0x00);
+    }
+
+    /**
+    * Can print string onto display
+    **/
+    public void PrintString(string text) {
+      for (int i = 0; i < text.Length; i++) {
+        PrintChar(text[i]);
+      }
+    }
+
+    /**
+    * Print single character onto display
+    **/
+    public void PrintChar(char letter) {
+      Write(Convert.ToByte(letter), 1);
+    }
+    
+    public void GoToPosition(byte column, byte row) {
+      var command = Convert.ToByte(column | _line_address[row] | (1 << LCD_WRITE));
+      SendCommand(command);
+    }
+    
+    /**
+    * Send data to display
+    **/
+    public void SendData(byte data) {
+      Write(data, 1);
+    }
+
+    /**
+    * Send command to display
+    **/
+    public void SendCommand(byte data) {
+      Write(data, 0);
+    }
+
+    /**
+    * Clear display and set cursor at start of the first line
+    **/
+    public void ClearScreen() {
+      PulseEnable(0);
+      PulseEnable(Convert.ToByte((1 << _D4)));
+      //Task.Delay(5).Wait();
+    }
+
+    /**
+    * Send pure data to display
+    **/
+    public void Write(byte data, byte Rs) {
+      PulseEnable(Convert.ToByte((data & 0xf0) | (Rs << _RS)));
+      PulseEnable(Convert.ToByte((data & 0x0f) << 4 | (Rs << _RS)));
+      //Task.Delay(5).Wait(); //In case of problem with displaying wrong characters uncomment this part
+    }
+
+    /**
+    * Create falling edge of "enable" pin to write data/inctruction to display
+    */
+    private void PulseEnable(byte data) {
+      _i2c_port.Write(new byte[] { Convert.ToByte(data | (1 << _EN) | (_back_light << _BL)) }); // Enable bit HIGH
+      _i2c_port.Write(new byte[] { Convert.ToByte(data | (_back_light << _BL)) }); // Enable bit LOW
+      //Task.Delay(2).Wait(); //In case of problem with displaying wrong characters uncomment this part
+    }
+
+    /**
+    * Save custom symbol to CGRAM
+    **/
+    public void CreateSymbol(byte[] data, byte address) {
+      SendCommand(Convert.ToByte(0x40 | (address << 3)));
+      for (var i = 0; i < data.Length; i++) {
+        SendData(data[i]);
+      }
+      ClearScreen();
+    }
+
+    /**
+    * Print custom symbol
+    **/
+    public void PrintSymbol(byte address) {
+      SendData(address);
+    }
+
+  }
 }

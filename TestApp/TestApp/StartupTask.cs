@@ -1,50 +1,28 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Net.Http;
 using Windows.ApplicationModel.Background;
 using System.Threading.Tasks;
 using Windows.Devices.Spi;
 using Windows.Devices.Enumeration;
-using Windows.UI.Xaml;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Devices.Gpio;
-using Microsoft.IoT.Devices.Adc;
 
 namespace TestApp {
   public sealed class StartupTask : IBackgroundTask {
     //Setup address
-    private const string I2C_CONTROLLER_NAME = "I2C1"; //use for RPI2
-    private const byte DEVICE_I2C_ADDRESS = 0x3F; // 7-bit I2C address of the port expander
+    private const string I2C_CONTROLLER_NAME = "I2C1";
+    private const byte DEVICE_I2C_ADDRESS = 0x3F;
 
-    //Setup pins
-    private const byte EN = 0x02;
-    private const byte RW = 0x01;
-    private const byte RS = 0x00;
-    private const byte D4 = 0x04;
-    private const byte D5 = 0x05;
-    private const byte D6 = 0x06;
-    private const byte D7 = 0x07;
-    private const byte BL = 0x03;
-
-
-    private const int LED_PIN = 4; // Use pin 12 if you are using DragonBoard
+    private const int LED_PIN = 4;
     private GpioPin ledPin;
 
-    private const string SPI_CONTROLLER_NAME = "SPI0";  /* Friendly name for Raspberry Pi 2 SPI controller          */
-    private const int SPI_CHIP_SELECT_LINE = 0;       /* Line 0 maps to physical pin number 24 on the Rpi2        */
+    private const string SPI_CONTROLLER_NAME = "SPI0";
+    private const int SPI_CHIP_SELECT_LINE = 0;
     private SpiDevice SpiADC;
 
     private int adcValue;
 
     public void Run(IBackgroundTaskInstance taskInstance) {
-
-      using (var adc = new MCP3008 { ChipSelectLine = SPI_CHIP_SELECT_LINE, ControllerName = SPI_CONTROLLER_NAME }) {
-        adc.AcquireChannel(0);
-        var value = adc.ReadValue(0);
-      }
-
+      
       InitAll().Wait();
 
       // Here is I2C bus and Display itself initialized.
@@ -55,11 +33,8 @@ namespace TestApp {
       //  For Arduino it should be `"I2C5"`, but I did't test it.
       //  Other arguments should be: RS = 0, RW = 1, EN = 2, D4 = 4, D5 = 5, D6 = 6, D7 = 7, BL = 3
       //  But it depends on your PCF8574.
-      displayI2C lcd = new displayI2C(DEVICE_I2C_ADDRESS, I2C_CONTROLLER_NAME, RS, RW, EN, D4, D5, D6, D7, BL);
-
-      //Initialization of HD44780 display do by init method.
-      //By arguments you can turnOnDisplay, turnOnCursor, blinkCursor, cursorDirection and textShift (in thius order)
-      lcd.init();
+      var lcd = DisplayI2C.Connect(DEVICE_I2C_ADDRESS, I2C_CONTROLLER_NAME).Result;
+      lcd.Initialize();
 
 
       // Here is created new symbol
@@ -74,21 +49,20 @@ namespace TestApp {
       // 0x00 => 00000 
 
       // data of symbol by lines                          //address of symbol
-      lcd.createSymbol(new byte[] { 0x00, 0x00, 0x0A, 0x00, 0x11, 0x0E, 0x00, 0x00 }, 0x00);
+      lcd.CreateSymbol(new byte[] { 0x00, 0x00, 0x0A, 0x00, 0x11, 0x0E, 0x00, 0x00 }, 0x00);
 
       // Here is printed string
-      lcd.prints("Good morning,");
+      lcd.PrintString("Good morning,");
 
-      // Navigation to second line
-      lcd.gotoxy(0, 1);
-      // Here is printed string
-      lcd.prints("gentlemans!!!1");
+      //// Navigation to second line
+      //lcd.GoToPosition(0, 1);
+      //// Here is printed string
+      //lcd.PrintString("gentlemans!!!1");
 
       // Here is printed our new symbol (emoticon)
-      lcd.printSymbol(0x00);
+      lcd.PrintSymbol(0x00);
 
-      lcd.gotoxy(0, 1);
-      lcd.prints("                ");
+      lcd.GoToPosition(0, 1);
 
       int x = 0;
 
@@ -97,8 +71,8 @@ namespace TestApp {
         LightLED();
 
         Task.Delay(1000).Wait();
-        lcd.gotoxy(0, 1);
-        lcd.prints(x++.ToString());
+        lcd.GoToPosition(0, 1);
+        lcd.PrintString(x++.ToString());
       }
     }
 
