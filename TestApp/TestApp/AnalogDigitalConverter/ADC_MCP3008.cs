@@ -5,19 +5,19 @@ using Windows.Devices.Enumeration;
 using Windows.Devices.Spi;
 
 namespace TestApp {
-  internal sealed class ADC_MCP3008 : IDisposable {
+  internal sealed class ADC_MCP3008_SPI : IDisposable {
 
     public int Resolution { get; } = 1024;
     private readonly SpiDevice _spi_port;
     private bool _disposed = false;
 
-    private ADC_MCP3008(SpiDevice spi_port) {
+    private ADC_MCP3008_SPI(SpiDevice spi_port) {
       _spi_port = spi_port;
     }
 
-    public async static Task<ADC_MCP3008> ConnectAsync(byte spi_chip_select_line = 0, string spi_controller_name = "SPI0") {
+    public async static Task<ADC_MCP3008_SPI> ConnectAsync(byte spi_chip_select_line = 0, string spi_controller_name = "SPI0") {
       var spi_port = await InitSPI(spi_chip_select_line, spi_controller_name).ConfigureAwait(false);
-      return new ADC_MCP3008(spi_port);
+      return new ADC_MCP3008_SPI(spi_port);
     }
 
     private async static Task<SpiDevice> InitSPI(byte spi_chip_select_line, string controller_name) {

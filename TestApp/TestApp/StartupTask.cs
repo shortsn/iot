@@ -32,7 +32,7 @@ namespace TestApp {
       };
       
       using (var shift_register = SR_74HC595N.ConnectAsync().Result) {
-        using (var mcp3008 = ADC_MCP3008.ConnectAsync().Result) {
+        using (var mcp3008 = ADC_MCP3008_SPI.ConnectAsync().Result) {
           using (var display = Display_16x2_I2C.ConnectAsync().Result) {
             display.Initialize();
 
