@@ -36,8 +36,8 @@ namespace TestApp {
       _i2c_port = i2c_port;
     }
 
-    public async static Task<DisplayI2C> Connect(byte deviceAddress, string controllerName, byte Rs = 0x00, byte Rw = 0x01, byte En = 0x02, byte D4 = 0x04, byte D5 = 0x05, byte D6 = 0x06, byte D7 = 0x07, byte Bl = 0x03) {
-      var i2c = await InitI2C(deviceAddress, controllerName).ConfigureAwait(false);
+    public async static Task<DisplayI2C> ConnectAsync(byte deviceAddress = 0x3F, string i2c_controller_name = "I2C1", byte Rs = 0x00, byte Rw = 0x01, byte En = 0x02, byte D4 = 0x04, byte D5 = 0x05, byte D6 = 0x06, byte D7 = 0x07, byte Bl = 0x03) {
+      var i2c = await InitI2C(deviceAddress, i2c_controller_name).ConfigureAwait(false);
       return new DisplayI2C(i2c, Rs, Rw, En, D4, D5, D6, D7, Bl);
     }
 
