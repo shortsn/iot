@@ -15,8 +15,11 @@ namespace TestApp {
     private const int LED_PIN = 4;
     private GpioPin ledPin;
 
+    BackgroundTaskDeferral deferral;
+
     public void Run(IBackgroundTaskInstance taskInstance) {
       //InitGpio();
+      deferral = taskInstance.GetDeferral();
 
       using (var mcp3008 = MCP3008.Connect(SPI_CHIP_SELECT_LINE, SPI_CONTROLLER_NAME).Result) {
         using (var display = DisplayI2C.Connect(DEVICE_I2C_ADDRESS, I2C_CONTROLLER_NAME).Result) {
