@@ -4,7 +4,7 @@ using Windows.Devices.Enumeration;
 using Windows.Devices.I2c;
 
 namespace TestApp {
-  internal sealed class DisplayI2C : IDisposable {
+  internal sealed class Display_16x2_I2C : IDisposable {
 
     private const byte LCD_WRITE = 0x07;
 
@@ -17,6 +17,9 @@ namespace TestApp {
     private readonly byte _RS;
     private readonly byte _BL;
 
+    public byte LineCount { get; } = 2;
+    public byte CharCount { get; } = 16;
+    
     private readonly byte[] _line_address = new byte[] { 0x00, 0x40 };
 
     private byte _back_light = 0x01;
@@ -24,7 +27,7 @@ namespace TestApp {
     private readonly I2cDevice _i2c_port;
     private bool _disposed = false;
 
-    public DisplayI2C(I2cDevice i2c_port, byte RS, byte RW, byte EN, byte D4, byte D5, byte D6, byte D7, byte BL) {
+    public Display_16x2_I2C(I2cDevice i2c_port, byte RS, byte RW, byte EN, byte D4, byte D5, byte D6, byte D7, byte BL) {
       _RS = RS;
       _RW = RW;
       _EN = EN;
@@ -36,9 +39,9 @@ namespace TestApp {
       _i2c_port = i2c_port;
     }
 
-    public async static Task<DisplayI2C> ConnectAsync(byte deviceAddress = 0x3F, string i2c_controller_name = "I2C1", byte Rs = 0x00, byte Rw = 0x01, byte En = 0x02, byte D4 = 0x04, byte D5 = 0x05, byte D6 = 0x06, byte D7 = 0x07, byte Bl = 0x03) {
+    public async static Task<Display_16x2_I2C> ConnectAsync(byte deviceAddress = 0x3F, string i2c_controller_name = "I2C1", byte Rs = 0x00, byte Rw = 0x01, byte En = 0x02, byte D4 = 0x04, byte D5 = 0x05, byte D6 = 0x06, byte D7 = 0x07, byte Bl = 0x03) {
       var i2c = await InitI2C(deviceAddress, i2c_controller_name).ConfigureAwait(false);
-      return new DisplayI2C(i2c, Rs, Rw, En, D4, D5, D6, D7, Bl);
+      return new Display_16x2_I2C(i2c, Rs, Rw, En, D4, D5, D6, D7, Bl);
     }
 
     private async static Task<I2cDevice> InitI2C(byte device_address, string controller_name) {
@@ -79,6 +82,11 @@ namespace TestApp {
       SendCommand(0x00);
     }
 
+    public void PrintLine(byte line, string text) {
+      SetCursor(0, line);
+      PrintString(text.PadRight(CharCount));
+    }
+
     public void PrintString(string text) {
       for (int i = 0; i < text.Length; i++) {
         PrintChar(text[i]);
@@ -101,8 +109,8 @@ namespace TestApp {
       Clear();
     }
 
-    public void SetCursor(byte column, byte row) {
-      var command = Convert.ToByte(column | _line_address[row] | (1 << LCD_WRITE));
+    public void SetCursor(byte position, byte line) {
+      var command = Convert.ToByte(position | _line_address[line] | (1 << LCD_WRITE));
       SendCommand(command);
     }
     
