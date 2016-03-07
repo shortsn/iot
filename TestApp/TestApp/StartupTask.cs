@@ -39,9 +39,14 @@ namespace TestApp {
 
             //Task.Delay(2000).Wait();
             //display.BacklightOn();
+            
+            
+            var sequence = new byte[] { 0, 1, 3, 7, 15, 31 };
 
             var channel0 = 0;
             var channel1 = 0;
+
+            var counter = 0;
 
             while ((channel0 + channel1) < 20) {
               display.SetCursor(0, 0);
@@ -50,11 +55,19 @@ namespace TestApp {
 
               //LightLED(value);
 
+              //if (counter >= sequence.Length) {
+              //  counter = 0;
+              //}
+
+              var index = channel0 / 2;
+              //System.Diagnostics.Debug.WriteLine(index);
+              shift_register.SendByte(sequence[index]);
+
               display.SetCursor(0, 1);
               channel1 = Convert.ToInt16(mcp3008.ReadValue(1) / 102.4);
               display.PrintString($"Channel 2:{ channel1 }  ");
-
-              Task.Delay(500).Wait();
+              
+              Task.Delay(250).Wait();
             }
 
             deferral.Complete();
