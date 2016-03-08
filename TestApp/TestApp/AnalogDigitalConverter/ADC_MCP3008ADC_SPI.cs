@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Linq;
+using System.Reactive.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
+using TestApp.AnalogDigitalConverter;
 using Windows.Devices.Enumeration;
 using Windows.Devices.Spi;
 
@@ -10,7 +13,7 @@ namespace TestApp {
     public int Resolution { get; } = 1024;
     private readonly SpiDevice _spi_port;
     private bool _disposed = false;
-
+    
     private ADC_MCP3008_SPI(SpiDevice spi_port) {
       _spi_port = spi_port;
     }
@@ -44,6 +47,14 @@ namespace TestApp {
       result += data[2];
       return result;
     }
+
+    public IObservable<PortValue<int>> MonitorPorts(TimeSpan interval, params byte[] ports)
+      => Observable
+      .Interval(interval)
+      .SelectMany(_ => ports.Select(port => new PortValue<int>(port, ReadValue(port))))
+      .GroupBy(value => value.Port)
+      .Select(port => port.DistinctUntilChanged())
+      .SelectMany(values => values);
 
     private void Dispose(bool disposing) {
       if (!_disposed) {

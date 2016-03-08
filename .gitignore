@@ -41,6 +41,7 @@ build/
 *.tmp
 *.tmp_proj
 *.log
+*.VC.opendb
 *.vspscc
 *.vssscc
 .builds

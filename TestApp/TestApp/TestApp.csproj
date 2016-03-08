@@ -96,13 +96,16 @@
   </PropertyGroup>
   <ItemGroup>
     <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
+    <None Include="ClassDiagram1.cd" />
     <None Include="project.json" />
     <None Include="TestApp_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AnalogDigitalConverter\PortExtensions.cs" />
+    <Compile Include="AnalogDigitalConverter\PortValue.cs" />
     <Compile Include="ShiftRegister\SR_74HC595N.cs" />
     <Compile Include="DisplayI2C.cs" />
-    <Compile Include="AnalogDigitalConverter\ADC_MCP3008.cs" />
+    <Compile Include="AnalogDigitalConverter\ADC_MCP3008ADC_SPI.cs" />
     <Compile Include="StartupTask.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
