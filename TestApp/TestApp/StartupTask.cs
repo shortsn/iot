@@ -14,6 +14,8 @@ namespace TestApp {
     BackgroundTaskDeferral _deferral;
     readonly CompositeDisposable _disposables = new CompositeDisposable();
 
+    private GpioPin _button;
+
     public void Run(IBackgroundTaskInstance taskInstance) {
       _deferral = taskInstance.GetDeferral();
 
@@ -30,16 +32,15 @@ namespace TestApp {
       media_player.Source = playbacklist;
 
       var controller = GpioController.GetDefaultAsync().AsTask().Result;
-      var button = controller.OpenPin(21);
+      _button = controller.OpenPin(21);
 
-      if (button.IsDriveModeSupported(GpioPinDriveMode.InputPullUp)) {
-        button.SetDriveMode(GpioPinDriveMode.InputPullUp);
+      if (_button.IsDriveModeSupported(GpioPinDriveMode.InputPullUp)) {
+        _button.SetDriveMode(GpioPinDriveMode.InputPullUp);
       } else {
-        button.SetDriveMode(GpioPinDriveMode.Input);
+        _button.SetDriveMode(GpioPinDriveMode.Input);
       }
-
-      button.DebounceTimeout = TimeSpan.FromMilliseconds(50);
-      button.ValueChanged += (pin, args) => {
+      _button.DebounceTimeout = TimeSpan.FromMilliseconds(50);
+      _button.ValueChanged += (pin, args) => {
         if (args.Edge == GpioPinEdge.RisingEdge)
         if (media_player.CurrentState == MediaPlayerState.Playing)
           media_player.Pause();
