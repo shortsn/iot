@@ -20,7 +20,7 @@ namespace TestApp {
 
       var mediaengine = new MediaEngine();
       var result = mediaengine.InitializeAsync().AsTask().Result;
-
+      
       mediaengine.MediaStateChanged += Mediaengine_MediaStateChanged;
 
       var radio_stations = new Tuple<string, string>[] {
@@ -30,6 +30,21 @@ namespace TestApp {
         Tuple.Create("the club", @"http://mp3.planetradio.de/plrchannels/hqtheclub.mp3"),
         Tuple.Create("nightwax", @"http://mp3.planetradio.de/plrchannels/hqnightwax.mp3"),
         Tuple.Create("black beats", @"http://mp3.planetradio.de/plrchannels/hqblackbeats.mp3" ),
+      };
+
+
+      var controller = GpioController.GetDefaultAsync().AsTask().Result;
+      var button = controller.OpenPin(21);
+
+      if (button.IsDriveModeSupported(GpioPinDriveMode.InputPullUp)) {
+        button.SetDriveMode(GpioPinDriveMode.InputPullUp);
+      } else {
+        button.SetDriveMode(GpioPinDriveMode.Input);
+      }
+
+      button.DebounceTimeout = TimeSpan.FromMilliseconds(50);
+      button.ValueChanged += (pin, args) => {
+        mediaengine.Pause();
       };
 
       var shift_register = SR_74HC595N.ConnectAsync().Result;
@@ -129,7 +144,7 @@ namespace TestApp {
 
 
     }
-
+    
     private void Mediaengine_MediaStateChanged(MediaState state) {
       System.Diagnostics.Debug.WriteLine(state.ToString());
     }
