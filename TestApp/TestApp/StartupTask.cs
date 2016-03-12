@@ -1,13 +1,12 @@
 ﻿using System;
 using Windows.ApplicationModel.Background;
-using System.Threading.Tasks;
 using System.Reactive.Linq;
 using Windows.Devices.Gpio;
-using Microsoft.Maker.Media.UniversalMediaEngine;
-using System.Collections.Generic;
 using TestApp.AnalogDigitalConverter;
-using System.Threading;
 using System.Reactive.Disposables;
+
+using Windows.Media.Playback;
+using Windows.Media.Core;
 
 namespace TestApp {
   public sealed class StartupTask : IBackgroundTask {
@@ -18,20 +17,17 @@ namespace TestApp {
     public void Run(IBackgroundTaskInstance taskInstance) {
       _deferral = taskInstance.GetDeferral();
 
-      var mediaengine = new MediaEngine();
-      var result = mediaengine.InitializeAsync().AsTask().Result;
-      
-      mediaengine.MediaStateChanged += Mediaengine_MediaStateChanged;
+      var playbacklist = new MediaPlaybackList();
+      playbacklist.Items.Add(CreatePlaybackItem("Fritz",@"http://fritz.de/livemp3"));
+      playbacklist.Items.Add(CreatePlaybackItem("live",@"http://mp3.planetradio.de/planetradio/hqlivestream.mp3"));
+      playbacklist.Items.Add(CreatePlaybackItem("itunes top 40",@"http://mp3.planetradio.de/plrchannels/hqitunes.mp3"));
+      playbacklist.Items.Add(CreatePlaybackItem("the club",@"http://mp3.planetradio.de/plrchannels/hqtheclub.mp3"));
+      playbacklist.Items.Add(CreatePlaybackItem("night wax",@"http://mp3.planetradio.de/plrchannels/hqnightwax.mp3"));
+      playbacklist.Items.Add(CreatePlaybackItem("black beats",@"http://mp3.planetradio.de/plrchannels/hqblackbeats.mp3"));
 
-      var radio_stations = new Tuple<string, string>[] {
-        Tuple.Create("fritz", @"http://fritz.de/livemp3"),
-        Tuple.Create("planet radio", @"http://mp3.planetradio.de/planetradio/hqlivestream.mp3"),
-        Tuple.Create("itunes hot 40", @"http://mp3.planetradio.de/plrchannels/hqitunes.mp3"),
-        Tuple.Create("the club", @"http://mp3.planetradio.de/plrchannels/hqtheclub.mp3"),
-        Tuple.Create("nightwax", @"http://mp3.planetradio.de/plrchannels/hqnightwax.mp3"),
-        Tuple.Create("black beats", @"http://mp3.planetradio.de/plrchannels/hqblackbeats.mp3" ),
-      };
-
+      var media_player = BackgroundMediaPlayer.Current;
+      media_player.AutoPlay = false;
+      media_player.Source = playbacklist;
 
       var controller = GpioController.GetDefaultAsync().AsTask().Result;
       var button = controller.OpenPin(21);
@@ -44,7 +40,11 @@ namespace TestApp {
 
       button.DebounceTimeout = TimeSpan.FromMilliseconds(50);
       button.ValueChanged += (pin, args) => {
-        mediaengine.Pause();
+        if (args.Edge == GpioPinEdge.RisingEdge)
+        if (media_player.CurrentState == MediaPlayerState.Playing)
+          media_player.Pause();
+        else
+          media_player.Play();
       };
 
       var shift_register = SR_74HC595N.ConnectAsync().Result;
@@ -95,7 +95,7 @@ namespace TestApp {
           switch (value.Port) {
             case 0:
               display.PrintLine(1, $"Volume: {value.Value.ToString("P0")}");
-              mediaengine.Volume = value.Value;
+              media_player.Volume = value.Value;
               break;
             case 1:
               if (value.Value == 10) {
@@ -108,45 +108,23 @@ namespace TestApp {
               }
               break;
             case 3:
-              var index = (int)value.Value;
+              var index = (uint)value.Value;
               shift_register.SendByte(sequence[index]);
-              var radio_station = radio_stations[index];
-              mediaengine.Play(radio_station.Item2);
-              display.PrintLine(0, radio_station.Item1);
+              playbacklist.MoveTo(index);
+              var item = playbacklist.Items[(int)index];
+              display.PrintLine(0, item.Source.CustomProperties["Name"].ToString());
               break;
           }
         }, 
         ex => System.Diagnostics.Debug.WriteLine(ex)
        );
-
-      //while ((channel0 + channel1) < 110) {
-
-      //  channel0 = Convert.ToInt16(mcp3008.ReadValue(0) / 102.4);
-      //  var index = channel0 / 2;
-      //  //System.Diagnostics.Debug.WriteLine(index);
-      //  shift_register.SendByte(sequence[index]);
-
-      //  var next_radio_station = radio_stations[index];
-
-      //  if (next_radio_station != current_radio_station) {
-      //    current_radio_station = next_radio_station;
-
-      //  }
-
-      //  channel1 = Convert.ToInt16(mcp3008.ReadValue(1) / 10.24);
-      //  display.PrintLine(1, $"Channel 2:{ channel1 }");
-
-      //  var volume = channel1 / 100d;
-      //  mediaengine.Volume = volume;
-
-      //  Task.Delay(250).Wait();
-      //}
-
-
+      
     }
-    
-    private void Mediaengine_MediaStateChanged(MediaState state) {
-      System.Diagnostics.Debug.WriteLine(state.ToString());
+
+    private MediaPlaybackItem CreatePlaybackItem(string name, string uri) {
+      var source = MediaSource.CreateFromUri(new Uri(uri));
+      source.CustomProperties["Name"] = name;
+      return new MediaPlaybackItem(source);
     }
 
   }
