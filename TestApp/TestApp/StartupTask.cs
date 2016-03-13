@@ -8,43 +8,43 @@ using System.Reactive.Disposables;
 using Windows.Media.Playback;
 using Windows.Media.Core;
 using System.Diagnostics;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace TestApp {
   public sealed class StartupTask : IBackgroundTask {
 
     BackgroundTaskDeferral _deferral;
     readonly CompositeDisposable _disposables = new CompositeDisposable();
-
-    private GpioPin _button;
-
+    
     public void Run(IBackgroundTaskInstance taskInstance) {
       _deferral = taskInstance.GetDeferral();
 
       var playbacklist = new MediaPlaybackList();
-      playbacklist.Items.Add(CreatePlaybackItem("Fritz",@"http://fritz.de/livemp3"));
-      playbacklist.Items.Add(CreatePlaybackItem("live",@"http://mp3.planetradio.de/planetradio/hqlivestream.mp3"));
-      playbacklist.Items.Add(CreatePlaybackItem("itunes top 40",@"http://mp3.planetradio.de/plrchannels/hqitunes.mp3"));
-      playbacklist.Items.Add(CreatePlaybackItem("the club",@"http://mp3.planetradio.de/plrchannels/hqtheclub.mp3"));
-      playbacklist.Items.Add(CreatePlaybackItem("night wax",@"http://mp3.planetradio.de/plrchannels/hqnightwax.mp3"));
-      playbacklist.Items.Add(CreatePlaybackItem("black beats",@"http://mp3.planetradio.de/plrchannels/hqblackbeats.mp3"));
+      playbacklist.Items.Add(CreatePlaybackItem("Fritz", @"http://fritz.de/livemp3"));
+      playbacklist.Items.Add(CreatePlaybackItem("live", @"http://mp3.planetradio.de/planetradio/hqlivestream.mp3"));
+      playbacklist.Items.Add(CreatePlaybackItem("itunes top 40", @"http://mp3.planetradio.de/plrchannels/hqitunes.mp3"));
+      playbacklist.Items.Add(CreatePlaybackItem("the club", @"http://mp3.planetradio.de/plrchannels/hqtheclub.mp3"));
+      playbacklist.Items.Add(CreatePlaybackItem("night wax", @"http://mp3.planetradio.de/plrchannels/hqnightwax.mp3"));
+      playbacklist.Items.Add(CreatePlaybackItem("black beats", @"http://mp3.planetradio.de/plrchannels/hqblackbeats.mp3"));
 
       var media_player = BackgroundMediaPlayer.Current;
       media_player.AutoPlay = false;
       media_player.Source = playbacklist;
 
-      var button = PushButton.ConnectAsync(21).Result;
+      var buttons = new[] { 21, 20, 16, 26, 19, 13 };
 
-      button
-        .StateStream
-        .Where(state => state == true)
-        .Subscribe(_ => {
-          Debug.WriteLine("Button pressed");
-          if (media_player.CurrentState == MediaPlayerState.Playing)
-            media_player.Pause();
-          else
-            media_player.Play();
+      Task
+        .WhenAll(buttons.Select(PushButton.ConnectAsync)).Result.ToList()
+        .ForEach(button => {
+          _disposables.Add(
+              button
+                .StateStream
+                .Subscribe(state => {
+                  Debug.WriteLine($"Button changed {state}");
+                })
+            );
         });
-
 
       //var controller = GpioController.GetDefaultAsync().AsTask().Result;
       //_button = controller.OpenPin(21);
@@ -93,6 +93,7 @@ namespace TestApp {
 
       var sequence = new byte[] { 0, 1, 3, 7, 15, 31 };
       
+      
       mcp3008
         .MonitorPorts(TimeSpan.FromMilliseconds(250), 0, 1, 2, 3, 4)
         .MapAndDistinct(value => {
@@ -116,12 +117,13 @@ namespace TestApp {
             case 1:
               if (value.Value == 10) {
                 try {
-                  System.Diagnostics.Debug.WriteLine("Shutdown");
+                  Debug.WriteLine("Shutdown");
                   _disposables.Dispose();
                 } finally {
                   _deferral.Complete();
                 }
-              }
+              } else
+                media_player.Play();
               break;
             case 3:
               var index = (uint)value.Value;
@@ -134,7 +136,6 @@ namespace TestApp {
         }, 
         ex => Debug.WriteLine(ex)
        );
-      
     }
 
     private MediaPlaybackItem CreatePlaybackItem(string name, string uri) {

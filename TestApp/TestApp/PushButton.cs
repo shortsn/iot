@@ -40,17 +40,8 @@ namespace TestApp {
     }
 
     public async static Task<PushButton> ConnectAsync(int button_gpio) {
-      var result = await ConnectAsync(new int[] { button_gpio }).ConfigureAwait(false);
-      return result[0];
-    }
-
-    public async static Task<IReadOnlyList<PushButton>> ConnectAsync(params int[] button_gpios) {
       var controller = await GpioController.GetDefaultAsync();
-
-      return button_gpios
-        .Select(controller.OpenPin)
-        .Select(gpio => new PushButton(gpio, TimeSpan.FromMilliseconds(50)))
-        .ToArray();
+      return new PushButton(controller.OpenPin(button_gpio), TimeSpan.FromMilliseconds(50));
     }
 
     private static void InitializeButtonPin(GpioPin gpio, TimeSpan debounce_timeout) {
