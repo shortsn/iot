@@ -7,6 +7,7 @@ using System.Reactive.Disposables;
 
 using Windows.Media.Playback;
 using Windows.Media.Core;
+using System.Diagnostics;
 
 namespace TestApp {
   public sealed class StartupTask : IBackgroundTask {
@@ -31,22 +32,36 @@ namespace TestApp {
       media_player.AutoPlay = false;
       media_player.Source = playbacklist;
 
-      var controller = GpioController.GetDefaultAsync().AsTask().Result;
-      _button = controller.OpenPin(21);
+      var button = PushButton.ConnectAsync(21).Result;
 
-      if (_button.IsDriveModeSupported(GpioPinDriveMode.InputPullUp)) {
-        _button.SetDriveMode(GpioPinDriveMode.InputPullUp);
-      } else {
-        _button.SetDriveMode(GpioPinDriveMode.Input);
-      }
-      _button.DebounceTimeout = TimeSpan.FromMilliseconds(50);
-      _button.ValueChanged += (pin, args) => {
-        if (args.Edge == GpioPinEdge.RisingEdge)
-        if (media_player.CurrentState == MediaPlayerState.Playing)
-          media_player.Pause();
-        else
-          media_player.Play();
-      };
+      button
+        .StateStream
+        .Where(state => state == true)
+        .Subscribe(_ => {
+          Debug.WriteLine("Button pressed");
+          if (media_player.CurrentState == MediaPlayerState.Playing)
+            media_player.Pause();
+          else
+            media_player.Play();
+        });
+
+
+      //var controller = GpioController.GetDefaultAsync().AsTask().Result;
+      //_button = controller.OpenPin(21);
+
+      //if (_button.IsDriveModeSupported(GpioPinDriveMode.InputPullUp)) {
+      //  _button.SetDriveMode(GpioPinDriveMode.InputPullUp);
+      //} else {
+      //  _button.SetDriveMode(GpioPinDriveMode.Input);
+      //}
+      //_button.DebounceTimeout = TimeSpan.FromMilliseconds(50);
+      //_button.ValueChanged += (pin, args) => {
+      //  if (args.Edge == GpioPinEdge.RisingEdge)
+      //  if (media_player.CurrentState == MediaPlayerState.Playing)
+      //    media_player.Pause();
+      //  else
+      //    media_player.Play();
+      //};
 
       var shift_register = SR_74HC595N.ConnectAsync().Result;
       _disposables.Add(shift_register);
@@ -91,7 +106,7 @@ namespace TestApp {
           }
         })
         .Subscribe(value => {
-          System.Diagnostics.Debug.WriteLine($"Port: {value.Port} Value: {value.Value}");
+          Debug.WriteLine($"Port: {value.Port} Value: {value.Value}");
 
           switch (value.Port) {
             case 0:
@@ -117,7 +132,7 @@ namespace TestApp {
               break;
           }
         }, 
-        ex => System.Diagnostics.Debug.WriteLine(ex)
+        ex => Debug.WriteLine(ex)
        );
       
     }

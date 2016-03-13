@@ -102,6 +102,7 @@
   <ItemGroup>
     <Compile Include="AnalogDigitalConverter\PortExtensions.cs" />
     <Compile Include="AnalogDigitalConverter\PortValue.cs" />
+    <Compile Include="PushButton.cs" />
     <Compile Include="ShiftRegister\SR_74HC595N.cs" />
     <Compile Include="DisplayI2C.cs" />
     <Compile Include="AnalogDigitalConverter\ADC_MCP3008ADC_SPI.cs" />
