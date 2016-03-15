@@ -10,6 +10,9 @@ using Windows.Media.Core;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Devkoes.Restup.WebServer.Http;
+using Devkoes.Restup.WebServer.Rest;
+using TestApp.WebApi;
 
 namespace TestApp {
   public sealed class StartupTask : IBackgroundTask {
@@ -31,6 +34,13 @@ namespace TestApp {
       var media_player = BackgroundMediaPlayer.Current;
       media_player.AutoPlay = false;
       media_player.Source = playbacklist;
+
+      var restRouteHandler = new RestRouteHandler();
+      restRouteHandler.RegisterController<RadioController>("Testparameter");
+
+      var httpServer = new HttpServer(8800);
+      httpServer.RegisterRoute("api", restRouteHandler);
+      httpServer.StartServerAsync().Wait();
 
       var buttons = new[] { 21, 20, 16, 26, 19, 13 };
 

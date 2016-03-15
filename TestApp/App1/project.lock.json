@@ -3,6 +3,7 @@
   "version": 1,
   "targets": {
     "UAP,Version=v10.0": {
+      "DryIoc/2.2.2": {},
       "IotWeb/0.8.6": {
         "compile": {
           "lib/uap10.0/IotWeb.Common.dll": {},
@@ -1567,6 +1568,7 @@
       }
     },
     "UAP,Version=v10.0/win10-arm": {
+      "DryIoc/2.2.2": {},
       "IotWeb/0.8.6": {
         "compile": {
           "lib/uap10.0/IotWeb.Common.dll": {},
@@ -3221,6 +3223,7 @@
       }
     },
     "UAP,Version=v10.0/win10-arm-aot": {
+      "DryIoc/2.2.2": {},
       "IotWeb/0.8.6": {
         "compile": {
           "lib/uap10.0/IotWeb.Common.dll": {},
@@ -4847,6 +4850,7 @@
       }
     },
     "UAP,Version=v10.0/win10-x64": {
+      "DryIoc/2.2.2": {},
       "IotWeb/0.8.6": {
         "compile": {
           "lib/uap10.0/IotWeb.Common.dll": {},
@@ -6506,6 +6510,7 @@
       }
     },
     "UAP,Version=v10.0/win10-x64-aot": {
+      "DryIoc/2.2.2": {},
       "IotWeb/0.8.6": {
         "compile": {
           "lib/uap10.0/IotWeb.Common.dll": {},
@@ -8132,6 +8137,7 @@
       }
     },
     "UAP,Version=v10.0/win10-x86": {
+      "DryIoc/2.2.2": {},
       "IotWeb/0.8.6": {
         "compile": {
           "lib/uap10.0/IotWeb.Common.dll": {},
@@ -9791,6 +9797,7 @@
       }
     },
     "UAP,Version=v10.0/win10-x86-aot": {
+      "DryIoc/2.2.2": {},
       "IotWeb/0.8.6": {
         "compile": {
           "lib/uap10.0/IotWeb.Common.dll": {},
@@ -11418,6 +11425,30 @@
     }
   },
   "libraries": {
+    "DryIoc/2.2.2": {
+      "sha512": "MHXho1WgcbAPH1nvBzx/3lDhHf1CUDakKjZJbf3xuKVDgAW1A57KN/+FNeTGV3v//5wiw/lXrF2uUUPGIiEsqg==",
+      "type": "Package",
+      "files": [
+        "[Content_Types].xml",
+        "_rels/.rels",
+        "content/net35/DryIoc/Container.cs",
+        "content/net35/DryIoc/FactoryCompiler.cs",
+        "content/net35/DryIoc/Ported-net40.cs",
+        "content/net35/DryIoc/Ported-net45.cs",
+        "content/net40/DryIoc/Container.cs",
+        "content/net40/DryIoc/FactoryCompiler.cs",
+        "content/net40/DryIoc/Ported-net45.cs",
+        "content/net45/DryIoc/AsyncExecutionFlowScopeContext.cs",
+        "content/net45/DryIoc/Container.cs",
+        "content/net45/DryIoc/FactoryCompiler.cs",
+        "content/portable-net4+sl5+netcore45+wpa81+wp8+MonoAndroid1+MonoTouch1/DryIoc/Container.cs",
+        "content/portable-net4+sl5+netcore45+wpa81+wp8+MonoAndroid1+MonoTouch1/DryIoc/Ported-net45.cs",
+        "content/portable-net45+netcore45+wpa81+wp8+MonoAndroid1+MonoTouch1/DryIoc/Container.cs",
+        "DryIoc.nuspec",
+        "LICENSE.txt",
+        "package/services/metadata/core-properties/93f45c6f4de145d5b9b4b8cf57d24116.psmdcp"
+      ]
+    },
     "IotWeb/0.8.6": {
       "sha512": "tZUol38ZMHB2i9fP8Dp8LYoXbelW90CcVgq/q3rytU+hDGoP44dq0FKuKdyheQdX33gIZdeAiO4Ivpbje1iDVQ==",
       "type": "Package",
@@ -14821,6 +14852,7 @@
   },
   "projectFileDependencyGroups": {
     "": [
+      "DryIoc >= 2.2.2",
       "IotWeb >= 0.8.6",
       "Microsoft.NETCore.UniversalWindowsPlatform >= 5.0.0",
       "Restup >= 1.0.0-beta2"

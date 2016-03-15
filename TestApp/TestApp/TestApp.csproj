@@ -108,6 +108,7 @@
     <Compile Include="AnalogDigitalConverter\ADC_MCP3008ADC_SPI.cs" />
     <Compile Include="StartupTask.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="WebApi\RadioController.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
