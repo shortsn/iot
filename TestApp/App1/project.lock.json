@@ -4,16 +4,6 @@
   "targets": {
     "UAP,Version=v10.0": {
       "DryIoc/2.2.2": {},
-      "IotWeb/0.8.6": {
-        "compile": {
-          "lib/uap10.0/IotWeb.Common.dll": {},
-          "lib/uap10.0/IotWeb.Server.dll": {}
-        },
-        "runtime": {
-          "lib/uap10.0/IotWeb.Common.dll": {},
-          "lib/uap10.0/IotWeb.Server.dll": {}
-        }
-      },
       "Microsoft.CSharp/4.0.0": {
         "dependencies": {
           "System.Collections": "[4.0.10, )",
@@ -1569,16 +1559,6 @@
     },
     "UAP,Version=v10.0/win10-arm": {
       "DryIoc/2.2.2": {},
-      "IotWeb/0.8.6": {
-        "compile": {
-          "lib/uap10.0/IotWeb.Common.dll": {},
-          "lib/uap10.0/IotWeb.Server.dll": {}
-        },
-        "runtime": {
-          "lib/uap10.0/IotWeb.Common.dll": {},
-          "lib/uap10.0/IotWeb.Server.dll": {}
-        }
-      },
       "Microsoft.CSharp/4.0.0": {
         "dependencies": {
           "System.Collections": "[4.0.10, )",
@@ -3224,16 +3204,6 @@
     },
     "UAP,Version=v10.0/win10-arm-aot": {
       "DryIoc/2.2.2": {},
-      "IotWeb/0.8.6": {
-        "compile": {
-          "lib/uap10.0/IotWeb.Common.dll": {},
-          "lib/uap10.0/IotWeb.Server.dll": {}
-        },
-        "runtime": {
-          "lib/uap10.0/IotWeb.Common.dll": {},
-          "lib/uap10.0/IotWeb.Server.dll": {}
-        }
-      },
       "Microsoft.CSharp/4.0.0": {
         "dependencies": {
           "System.Collections": "[4.0.10, )",
@@ -4851,16 +4821,6 @@
     },
     "UAP,Version=v10.0/win10-x64": {
       "DryIoc/2.2.2": {},
-      "IotWeb/0.8.6": {
-        "compile": {
-          "lib/uap10.0/IotWeb.Common.dll": {},
-          "lib/uap10.0/IotWeb.Server.dll": {}
-        },
-        "runtime": {
-          "lib/uap10.0/IotWeb.Common.dll": {},
-          "lib/uap10.0/IotWeb.Server.dll": {}
-        }
-      },
       "Microsoft.CSharp/4.0.0": {
         "dependencies": {
           "System.Collections": "[4.0.10, )",
@@ -6511,16 +6471,6 @@
     },
     "UAP,Version=v10.0/win10-x64-aot": {
       "DryIoc/2.2.2": {},
-      "IotWeb/0.8.6": {
-        "compile": {
-          "lib/uap10.0/IotWeb.Common.dll": {},
-          "lib/uap10.0/IotWeb.Server.dll": {}
-        },
-        "runtime": {
-          "lib/uap10.0/IotWeb.Common.dll": {},
-          "lib/uap10.0/IotWeb.Server.dll": {}
-        }
-      },
       "Microsoft.CSharp/4.0.0": {
         "dependencies": {
           "System.Collections": "[4.0.10, )",
@@ -8138,16 +8088,6 @@
     },
     "UAP,Version=v10.0/win10-x86": {
       "DryIoc/2.2.2": {},
-      "IotWeb/0.8.6": {
-        "compile": {
-          "lib/uap10.0/IotWeb.Common.dll": {},
-          "lib/uap10.0/IotWeb.Server.dll": {}
-        },
-        "runtime": {
-          "lib/uap10.0/IotWeb.Common.dll": {},
-          "lib/uap10.0/IotWeb.Server.dll": {}
-        }
-      },
       "Microsoft.CSharp/4.0.0": {
         "dependencies": {
           "System.Collections": "[4.0.10, )",
@@ -9798,16 +9738,6 @@
     },
     "UAP,Version=v10.0/win10-x86-aot": {
       "DryIoc/2.2.2": {},
-      "IotWeb/0.8.6": {
-        "compile": {
-          "lib/uap10.0/IotWeb.Common.dll": {},
-          "lib/uap10.0/IotWeb.Server.dll": {}
-        },
-        "runtime": {
-          "lib/uap10.0/IotWeb.Common.dll": {},
-          "lib/uap10.0/IotWeb.Server.dll": {}
-        }
-      },
       "Microsoft.CSharp/4.0.0": {
         "dependencies": {
           "System.Collections": "[4.0.10, )",
@@ -11447,24 +11377,6 @@
         "DryIoc.nuspec",
         "LICENSE.txt",
         "package/services/metadata/core-properties/93f45c6f4de145d5b9b4b8cf57d24116.psmdcp"
-      ]
-    },
-    "IotWeb/0.8.6": {
-      "sha512": "tZUol38ZMHB2i9fP8Dp8LYoXbelW90CcVgq/q3rytU+hDGoP44dq0FKuKdyheQdX33gIZdeAiO4Ivpbje1iDVQ==",
-      "type": "Package",
-      "files": [
-        "[Content_Types].xml",
-        "_rels/.rels",
-        "IotWeb.nuspec",
-        "lib/net45/IotWeb.Common.dll",
-        "lib/net45/IotWeb.Common.pdb",
-        "lib/net45/IotWeb.Server.dll",
-        "lib/net45/IotWeb.Server.pdb",
-        "lib/uap10.0/IotWeb.Common.dll",
-        "lib/uap10.0/IotWeb.Common.pdb",
-        "lib/uap10.0/IotWeb.Server.dll",
-        "lib/uap10.0/IotWeb.Server.pdb",
-        "package/services/metadata/core-properties/cc30d54a68244903b946526d9cc3451b.psmdcp"
       ]
     },
     "Microsoft.CSharp/4.0.0": {
@@ -14853,7 +14765,6 @@
   "projectFileDependencyGroups": {
     "": [
       "DryIoc >= 2.2.2",
-      "IotWeb >= 0.8.6",
       "Microsoft.NETCore.UniversalWindowsPlatform >= 5.0.0",
       "Restup >= 1.0.0-beta2"
     ],

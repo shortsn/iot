@@ -1,5 +1,6 @@
 ﻿{
   "dependencies": {
+    "DryIoc": "2.2.2",
     "Microsoft.NETCore.UniversalWindowsPlatform": "5.0.0",
     "Restup": "1.0.0-beta2",
     "Rx-Main": "2.2.5"

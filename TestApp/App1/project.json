@@ -1,7 +1,6 @@
 ﻿{
   "dependencies": {
     "DryIoc": "2.2.2",
-    "IotWeb": "0.8.6",
     "Microsoft.NETCore.UniversalWindowsPlatform": "5.0.0",
     "Restup": "1.0.0-beta2"
   },
