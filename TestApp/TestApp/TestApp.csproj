@@ -100,19 +100,9 @@
     <None Include="TestApp_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AnalogDigitalConverter\IAnalogDigitalConverter.cs" />
-    <Compile Include="AnalogDigitalConverter\PortExtensions.cs" />
-    <Compile Include="AnalogDigitalConverter\PortValue.cs" />
     <Compile Include="Bootstrapper.cs" />
-    <Compile Include="Display\IDisplay.cs" />
-    <Compile Include="Input\PushButton.cs" />
-    <Compile Include="ShiftRegister\IShiftRegister.cs" />
-    <Compile Include="ShiftRegister\SR_74HC595N.cs" />
-    <Compile Include="Display\DisplayI2C.cs" />
-    <Compile Include="AnalogDigitalConverter\ADC_MCP3008ADC_SPI.cs" />
     <Compile Include="StartupTask.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="WebApi\RadioController.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
@@ -147,6 +137,12 @@
     <SDKReference Include="WindowsIoT, Version=10.0.10586.0">
       <Name>Windows IoT Extensions for the UWP</Name>
     </SDKReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Radio.Lib\Radio.Lib.csproj">
+      <Project>{5ffcc012-e1bc-4c8b-806e-f0cc488216bf}</Project>
+      <Name>Radio.Lib</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

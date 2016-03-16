@@ -1,10 +1,12 @@
 ﻿using DryIoc;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
-using Radio.Lib.Display;
-using Radio.Lib.ShiftRegister;
-using Radio.Lib.AnalogDigitalConverter;
-using Radio.Lib.Infrastructure;
+using TestApp.AnalogDigitalConverter;
+using TestApp.Display;
+using TestApp.ShiftRegister;
 
 namespace TestApp {
   internal static class Bootstrapper {

@@ -1,8 +1,6 @@
 ﻿using System;
 using Windows.ApplicationModel.Background;
 using System.Reactive.Linq;
-using Windows.Devices.Gpio;
-using TestApp.AnalogDigitalConverter;
 using System.Reactive.Disposables;
 
 using Windows.Media.Playback;
@@ -12,10 +10,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using Devkoes.Restup.WebServer.Http;
 using Devkoes.Restup.WebServer.Rest;
-using TestApp.WebApi;
 using DryIoc;
-using TestApp.Display;
-using TestApp.ShiftRegister;
+using Radio.Lib.Infrastructure;
+using Radio.Lib.Display;
+using Radio.Lib.ShiftRegister;
+using Radio.Lib.AnalogDigitalConverter;
+using Radio.Lib.Input;
+using Radio.Lib.WebApi;
 
 namespace TestApp {
   public sealed class StartupTask : IBackgroundTask {
@@ -81,14 +82,15 @@ namespace TestApp {
       var container = Bootstrapper.CreateContainer();
       _disposables.Add(container);
 
-      var display = container.Resolve<IDisplay>();
-      var shift_register = container.Resolve<IShiftRegister>();
-      var ad_converter = container.Resolve<IAnalogDigitalConverter>();
-      
-      
+      var display = container.Resolve<IFactory<IDisplay>>().Create();
+      _disposables.Add(display);
+      var shift_register = container.Resolve<IFactory<IShiftRegister>>().Create();
+      _disposables.Add(shift_register);
+      var ad_converter = container.Resolve<IFactory<IAnalogDigitalConverter>>().Create();
+      _disposables.Add(ad_converter);
+
       //display.PrintSymbol(0x00);
       
-
       var sequence = new byte[] { 0, 1, 3, 7, 15, 31 };
       
       
