@@ -13,6 +13,9 @@ using System.Threading.Tasks;
 using Devkoes.Restup.WebServer.Http;
 using Devkoes.Restup.WebServer.Rest;
 using TestApp.WebApi;
+using DryIoc;
+using TestApp.Display;
+using TestApp.ShiftRegister;
 
 namespace TestApp {
   public sealed class StartupTask : IBackgroundTask {
@@ -22,6 +25,7 @@ namespace TestApp {
     
     public void Run(IBackgroundTaskInstance taskInstance) {
       _deferral = taskInstance.GetDeferral();
+
 
       var playbacklist = new MediaPlaybackList();
       playbacklist.Items.Add(CreatePlaybackItem("Fritz", @"http://fritz.de/livemp3"));
@@ -73,38 +77,22 @@ namespace TestApp {
       //    media_player.Play();
       //};
 
-      var shift_register = SR_74HC595N.ConnectAsync().Result;
-      _disposables.Add(shift_register);
-      var mcp3008 = ADC_MCP3008_SPI.ConnectAsync().Result;
-      _disposables.Add(mcp3008);
-      var display = Display_16x2_I2C.ConnectAsync().Result;
-      _disposables.Add(display);
-      display.Initialize();
 
-      // Here is created new symbol
-      // Take a look at data - it's smile emoticon
-      // 0x00 => 00000
-      // 0x00 => 00000
-      // 0x0A => 01010
-      // 0x00 => 00000
-      // 0x11 => 10001
-      // 0x0E => 01110
-      // 0x00 => 00000
-      // 0x00 => 00000 
-      display.CreateChar(0x00, new byte[] { 0x00, 0x00, 0x0A, 0x00, 0x11, 0x0E, 0x00, 0x00 });
+      var container = Bootstrapper.CreateContainer();
+      _disposables.Add(container);
 
-      //display.ClearScreen();
-      //display.BacklightOff();
-
+      var display = container.Resolve<IDisplay>();
+      var shift_register = container.Resolve<IShiftRegister>();
+      var ad_converter = container.Resolve<IAnalogDigitalConverter>();
+      
+      
       //display.PrintSymbol(0x00);
-
-      //Task.Delay(2000).Wait();
-      //display.BacklightOn();
+      
 
       var sequence = new byte[] { 0, 1, 3, 7, 15, 31 };
       
       
-      mcp3008
+      ad_converter
         .MonitorPorts(TimeSpan.FromMilliseconds(250), 0, 1, 2, 3, 4)
         .MapAndDistinct(value => {
           switch (value.Port) {

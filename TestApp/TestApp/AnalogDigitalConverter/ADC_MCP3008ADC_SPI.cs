@@ -8,7 +8,7 @@ using Windows.Devices.Enumeration;
 using Windows.Devices.Spi;
 
 namespace TestApp {
-  internal sealed class ADC_MCP3008_SPI : IDisposable {
+  internal sealed class ADC_MCP3008_SPI : IAnalogDigitalConverter {
 
     public int Resolution { get; } = 1024;
     private readonly SpiDevice _spi_port;

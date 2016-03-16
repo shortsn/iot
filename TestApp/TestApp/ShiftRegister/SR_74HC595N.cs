@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
+using TestApp.ShiftRegister;
 using Windows.Devices.Gpio;
 
 namespace TestApp {
-  internal sealed class SR_74HC595N : IDisposable {
+  internal sealed class SR_74HC595N : IShiftRegister {
 
     private bool _disposed = false;
 
@@ -71,7 +72,7 @@ namespace TestApp {
       _register_clock.Write(GpioPinValue.High);
     }
 
-    public void SendBit(bool high) {
+    private void SendBit(bool high) {
       _serial.Write(high ? GpioPinValue.High : GpioPinValue.Low);
       _shift_register_clock.Write(GpioPinValue.High);
       _shift_register_clock.Write(GpioPinValue.Low);
