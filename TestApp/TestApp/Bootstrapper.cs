@@ -5,6 +5,9 @@ using Radio.Lib.Display;
 using Radio.Lib.ShiftRegister;
 using Radio.Lib.AnalogDigitalConverter;
 using Radio.Lib.Infrastructure;
+using Radio.Lib.Input;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace TestApp {
   internal static class Bootstrapper {
@@ -16,8 +19,15 @@ namespace TestApp {
       container.RegisterFactory<IDisplay>(() => InitializeDisplay().Result);
       container.RegisterFactory<IShiftRegister>(() => SR_74HC595N.ConnectAsync().Result);
       container.RegisterFactory<IAnalogDigitalConverter>(() => ADC_MCP3008_SPI.ConnectAsync().Result);
+      container.RegisterFactory<IReadOnlyDictionary<int, IPushButton>>(() => InitializeButtons().Result);
 
       return container;
+    }
+
+    private async static Task<Dictionary<int, IPushButton>> InitializeButtons() {
+      var button_pins = new[] { 21, 20, 16, 26, 19, 13 };
+      IPushButton[] buttons = await Task.WhenAll(button_pins.Select(PushButton.ConnectAsync)).ConfigureAwait(false);
+      return buttons.ToDictionary(b => b.Id);
     }
 
     private static void RegisterFactory<TService>(this IRegistrator container, Func<TService> factory_method) 

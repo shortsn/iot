@@ -7,7 +7,7 @@ using Windows.Devices.Gpio;
 using Windows.Foundation;
 
 namespace Radio.Lib.Input {
-  public sealed class PushButton : IDisposable {
+  public sealed class PushButton : IPushButton {
 
     private bool _disposed = false;
 
@@ -16,8 +16,8 @@ namespace Radio.Lib.Input {
     private readonly GpioPin _button_pin;
     private readonly BehaviorSubject<bool> _button_state;
 
+    public int Id => _button_pin.PinNumber;
     public TimeSpan DebounceTimeout => _button_pin.DebounceTimeout;
-
     public IObservable<bool> StateStream { get; }
 
     public PushButton(GpioPin button_pin, TimeSpan debounce_timeout) {

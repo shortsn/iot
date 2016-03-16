@@ -17,6 +17,7 @@ using Radio.Lib.ShiftRegister;
 using Radio.Lib.AnalogDigitalConverter;
 using Radio.Lib.Input;
 using Radio.Lib.WebApi;
+using System.Collections.Generic;
 
 namespace TestApp {
   public sealed class StartupTask : IBackgroundTask {
@@ -47,11 +48,15 @@ namespace TestApp {
       httpServer.RegisterRoute("api", restRouteHandler);
       httpServer.StartServerAsync().Wait();
 
-      var buttons = new[] { 21, 20, 16, 26, 19, 13 };
-
-      Task
-        .WhenAll(buttons.Select(PushButton.ConnectAsync)).Result.ToList()
+      var container = Bootstrapper.CreateContainer();
+      _disposables.Add(container);
+      
+      var buttons = container.Resolve<IFactory<IReadOnlyDictionary<int, IPushButton>>>().Create();
+      buttons
+        .Values
+        .ToList()
         .ForEach(button => {
+          _disposables.Add(button);
           _disposables.Add(
               button
                 .StateStream
@@ -77,10 +82,7 @@ namespace TestApp {
       //  else
       //    media_player.Play();
       //};
-
-
-      var container = Bootstrapper.CreateContainer();
-      _disposables.Add(container);
+      
 
       var display = container.Resolve<IFactory<IDisplay>>().Create();
       _disposables.Add(display);

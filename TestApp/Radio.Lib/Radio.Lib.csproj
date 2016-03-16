@@ -115,6 +115,7 @@
     <Compile Include="Display\DisplayI2C.cs" />
     <Compile Include="Display\IDisplay.cs" />
     <Compile Include="Infrastructure\IFactory.cs" />
+    <Compile Include="Input\IPushButton.cs" />
     <Compile Include="Input\PushButton.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ShiftRegister\IShiftRegister.cs" />

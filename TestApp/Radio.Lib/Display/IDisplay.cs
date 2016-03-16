@@ -4,6 +4,8 @@ namespace Radio.Lib.Display {
   public interface IDisplay : IDisposable {
     byte LineCount { get; }
     byte CharCount { get; }
+
+    void Initialize(bool turnOnDisplay = true, bool turnOnCursor = false, bool blinkCursor = false, bool cursorDirection = true, bool textShift = false);
     void BacklightOn();
     void BacklightOff();
     void PrintLine(byte line, string text);
