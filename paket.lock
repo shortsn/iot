@@ -1,0 +1,8 @@
+
+
+GROUP Build
+NUGET
+  remote: https://www.nuget.org/api/v2
+  specs:
+    docfx.msbuild (1.6.1)
+    FAKE (4.22.6)
