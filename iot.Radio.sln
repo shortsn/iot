@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestApp", "TestApp\TestApp.csproj", "{487FF19F-7FD3-4612-8118-D9E20EFD3278}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestApp", "src\TestApp\TestApp.csproj", "{487FF19F-7FD3-4612-8118-D9E20EFD3278}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Radio.Lib", "Radio.Lib\Radio.Lib.csproj", "{5FFCC012-E1BC-4C8B-806E-F0CC488216BF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Radio.Lib", "src\Radio.Lib\Radio.Lib.csproj", "{5FFCC012-E1BC-4C8B-806E-F0CC488216BF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
