@@ -31,7 +31,7 @@ Target "Compile" (fun () ->
   traceHeader "Compile"
   
   !! "iot.Radio.sln"
-    |> MSBuildReleaseExt dir_bin ["Platform","ARM"] "Build"
+    |> MSBuildReleaseExt "" ["Platform","ARM"] "Build"
     |> Log "Build-Output: "
 
 )
