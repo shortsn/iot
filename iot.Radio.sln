@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestApp", "src\TestApp\Test
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Radio.Lib", "src\Radio.Lib\Radio.Lib.csproj", "{5FFCC012-E1BC-4C8B-806E-F0CC488216BF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Radio.App", "src\Radio.App\Radio.App.csproj", "{72422D97-B348-494F-918E-6A8A1E78AC61}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -55,6 +57,26 @@ Global
 		{5FFCC012-E1BC-4C8B-806E-F0CC488216BF}.Release|x64.Build.0 = Release|x64
 		{5FFCC012-E1BC-4C8B-806E-F0CC488216BF}.Release|x86.ActiveCfg = Release|x86
 		{5FFCC012-E1BC-4C8B-806E-F0CC488216BF}.Release|x86.Build.0 = Release|x86
+		{72422D97-B348-494F-918E-6A8A1E78AC61}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{72422D97-B348-494F-918E-6A8A1E78AC61}.Debug|ARM.ActiveCfg = Debug|ARM
+		{72422D97-B348-494F-918E-6A8A1E78AC61}.Debug|ARM.Build.0 = Debug|ARM
+		{72422D97-B348-494F-918E-6A8A1E78AC61}.Debug|ARM.Deploy.0 = Debug|ARM
+		{72422D97-B348-494F-918E-6A8A1E78AC61}.Debug|x64.ActiveCfg = Debug|x64
+		{72422D97-B348-494F-918E-6A8A1E78AC61}.Debug|x64.Build.0 = Debug|x64
+		{72422D97-B348-494F-918E-6A8A1E78AC61}.Debug|x64.Deploy.0 = Debug|x64
+		{72422D97-B348-494F-918E-6A8A1E78AC61}.Debug|x86.ActiveCfg = Debug|x86
+		{72422D97-B348-494F-918E-6A8A1E78AC61}.Debug|x86.Build.0 = Debug|x86
+		{72422D97-B348-494F-918E-6A8A1E78AC61}.Debug|x86.Deploy.0 = Debug|x86
+		{72422D97-B348-494F-918E-6A8A1E78AC61}.Release|Any CPU.ActiveCfg = Release|x86
+		{72422D97-B348-494F-918E-6A8A1E78AC61}.Release|ARM.ActiveCfg = Release|ARM
+		{72422D97-B348-494F-918E-6A8A1E78AC61}.Release|ARM.Build.0 = Release|ARM
+		{72422D97-B348-494F-918E-6A8A1E78AC61}.Release|ARM.Deploy.0 = Release|ARM
+		{72422D97-B348-494F-918E-6A8A1E78AC61}.Release|x64.ActiveCfg = Release|x64
+		{72422D97-B348-494F-918E-6A8A1E78AC61}.Release|x64.Build.0 = Release|x64
+		{72422D97-B348-494F-918E-6A8A1E78AC61}.Release|x64.Deploy.0 = Release|x64
+		{72422D97-B348-494F-918E-6A8A1E78AC61}.Release|x86.ActiveCfg = Release|x86
+		{72422D97-B348-494F-918E-6A8A1E78AC61}.Release|x86.Build.0 = Release|x86
+		{72422D97-B348-494F-918E-6A8A1E78AC61}.Release|x86.Deploy.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
