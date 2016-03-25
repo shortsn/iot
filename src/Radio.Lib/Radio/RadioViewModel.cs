@@ -57,6 +57,7 @@ namespace Radio.Lib.Radio {
 
       Display = display_factory.CreateAsync().GetAwaiter().GetResult();
       Disposables.Add(Display);
+      //display.PrintSymbol(0x00);
 
       ShiftRegister = shift_register_factory.CreateAsync().GetAwaiter().GetResult();
       Disposables.Add(ShiftRegister);
@@ -68,6 +69,17 @@ namespace Radio.Lib.Radio {
     }
 
     private void InitializeSubscriptions() {
+
+      foreach (var button in PushButtons.Values) {
+        Disposables.Add(
+          button
+            .StateStream
+            .Subscribe(state => {
+              Debug.WriteLine($"Button changed {state}");
+            })
+        );
+      }
+
       var sequence = new byte[] { 0, 1, 3, 7, 15, 31 };
 
       Disposables.Add(AnalogDigitalConverter
