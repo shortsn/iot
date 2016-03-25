@@ -13,6 +13,8 @@ namespace Radio.Lib.Radio {
     private bool _is_disposed = false;
     
     public RadioViewModel() {
+
+      /*
       var playbacklist = new MediaPlaybackList();
       playbacklist.Items.Add(CreatePlaybackItem("Fritz", @"http://fritz.de/livemp3"));
       playbacklist.Items.Add(CreatePlaybackItem("live", @"http://mp3.planetradio.de/planetradio/hqlivestream.mp3"));
@@ -24,7 +26,7 @@ namespace Radio.Lib.Radio {
       var media_player = BackgroundMediaPlayer.Current;
       media_player.AutoPlay = false;
       media_player.Source = playbacklist;
-
+      */
 
 
     }
