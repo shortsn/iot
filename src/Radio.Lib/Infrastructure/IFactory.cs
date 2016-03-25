@@ -1,5 +1,8 @@
-﻿namespace Radio.Lib.Infrastructure {
+﻿using System.Threading;
+using System.Threading.Tasks;
+
+namespace Radio.Lib.Infrastructure {
   public interface IFactory<TService> {
-    TService Create();
+    Task<TService> CreateAsync(CancellationToken cancellation_token = default(CancellationToken));
   }
 }

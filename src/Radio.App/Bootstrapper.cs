@@ -8,6 +8,7 @@ using Radio.Lib.Infrastructure;
 using Radio.Lib.Input;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 
 namespace Radio.App {
   internal static class Bootstrapper {
@@ -16,10 +17,10 @@ namespace Radio.App {
       => new Container().RegisterServices();
 
     private static TContainer RegisterServices<TContainer>(this TContainer container) where TContainer : IRegistrator {
-      container.RegisterFactory<IDisplay>(() => InitializeDisplay().Result);
-      container.RegisterFactory<IShiftRegister>(() => SR_74HC595N.ConnectAsync().Result);
-      container.RegisterFactory<IAnalogDigitalConverter>(() => ADC_MCP3008_SPI.ConnectAsync().Result);
-      container.RegisterFactory<IReadOnlyDictionary<int, IPushButton>>(() => InitializeButtons().Result);
+      container.RegisterFactory<IDisplay>(async cancellation_token => await InitializeDisplay().ConfigureAwait(false));
+      container.RegisterFactory<IShiftRegister>(async cancellation_token => await SR_74HC595N.ConnectAsync().ConfigureAwait(false));
+      container.RegisterFactory<IAnalogDigitalConverter>(async cancellation_token => await ADC_MCP3008_SPI.ConnectAsync().ConfigureAwait(false));
+      container.RegisterFactory<IReadOnlyDictionary<int, IPushButton>>(async cancellation_token => await InitializeButtons().ConfigureAwait(false));
 
       return container;
     }
@@ -30,7 +31,7 @@ namespace Radio.App {
       return buttons.ToDictionary(b => b.Id);
     }
 
-    private static void RegisterFactory<TService>(this IRegistrator container, Func<TService> factory_method) 
+    private static void RegisterFactory<TService>(this IRegistrator container, Func<CancellationToken, Task<TService>> factory_method) 
       => container.RegisterDelegate<IFactory<TService>>(_ => new DelegateFactory<TService>(factory_method), Reuse.Singleton);
 
     private async static Task<Display_16x2_I2C> InitializeDisplay() {

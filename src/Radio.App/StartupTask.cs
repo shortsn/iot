@@ -25,7 +25,7 @@ namespace Radio.App
     BackgroundTaskDeferral _deferral;
     readonly CompositeDisposable _disposables = new CompositeDisposable();
 
-    public void Run(IBackgroundTaskInstance taskInstance) {
+    public async void Run(IBackgroundTaskInstance taskInstance) {
       _deferral = taskInstance.GetDeferral();
 
 
@@ -51,7 +51,7 @@ namespace Radio.App
       var container = Bootstrapper.CreateContainer();
       _disposables.Add(container);
 
-      var buttons = container.Resolve<IFactory<IReadOnlyDictionary<int, IPushButton>>>().Create();
+      var buttons = await container.Resolve<IFactory<IReadOnlyDictionary<int, IPushButton>>>().CreateAsync().ConfigureAwait(false);
       buttons
         .Values
         .ToList()
@@ -84,11 +84,11 @@ namespace Radio.App
       //};
 
 
-      var display = container.Resolve<IFactory<IDisplay>>().Create();
+      var display = await container.Resolve<IFactory<IDisplay>>().CreateAsync().ConfigureAwait(false);
       _disposables.Add(display);
-      var shift_register = container.Resolve<IFactory<IShiftRegister>>().Create();
+      var shift_register = await container.Resolve<IFactory<IShiftRegister>>().CreateAsync().ConfigureAwait(false);
       _disposables.Add(shift_register);
-      var ad_converter = container.Resolve<IFactory<IAnalogDigitalConverter>>().Create();
+      var ad_converter = await container.Resolve<IFactory<IAnalogDigitalConverter>>().CreateAsync().ConfigureAwait(false);
       _disposables.Add(ad_converter);
 
       //display.PrintSymbol(0x00);
