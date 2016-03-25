@@ -9,6 +9,7 @@ using Radio.Lib.Input;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using Radio.Lib.Radio;
 
 namespace Radio.App {
   internal static class Bootstrapper {
@@ -21,6 +22,7 @@ namespace Radio.App {
       container.RegisterFactory<IShiftRegister>(async cancellation_token => await SR_74HC595N.ConnectAsync().ConfigureAwait(false));
       container.RegisterFactory<IAnalogDigitalConverter>(async cancellation_token => await ADC_MCP3008_SPI.ConnectAsync().ConfigureAwait(false));
       container.RegisterFactory<IReadOnlyDictionary<int, IPushButton>>(async cancellation_token => await InitializeButtons().ConfigureAwait(false));
+      container.Register<IRadioViewModel, RadioViewModel>(Reuse.Singleton);
 
       return container;
     }

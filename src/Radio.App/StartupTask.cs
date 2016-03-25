@@ -15,6 +15,7 @@ using Devkoes.Restup.WebServer.Rest;
 using Radio.Lib.WebApi;
 using System.Reactive.Disposables;
 using System.Diagnostics;
+using Radio.Lib.Radio;
 
 // The Background Application template is documented at http://go.microsoft.com/fwlink/?LinkID=533884&clcid=0x409
 
@@ -49,6 +50,10 @@ namespace Radio.App
       httpServer.StartServerAsync().Wait();
 
       var container = Bootstrapper.CreateContainer();
+
+      var radio = container.Resolve<IRadioViewModel>();
+
+
       _disposables.Add(container);
 
       var buttons = await container.Resolve<IFactory<IReadOnlyDictionary<int, IPushButton>>>().CreateAsync().ConfigureAwait(false);

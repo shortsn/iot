@@ -118,6 +118,9 @@
     <Compile Include="Input\IPushButton.cs" />
     <Compile Include="Input\PushButton.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Radio\IRadioViewModel.cs" />
+    <Compile Include="Radio\PlaylistItem.cs" />
+    <Compile Include="Radio\RadioViewModel.cs" />
     <Compile Include="ShiftRegister\IShiftRegister.cs" />
     <Compile Include="ShiftRegister\SR_74HC595N.cs" />
     <Compile Include="WebApi\RadioController.cs" />
