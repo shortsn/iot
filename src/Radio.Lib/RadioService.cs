@@ -2,6 +2,7 @@
 using Devkoes.Restup.WebServer.Rest;
 using Radio.Lib.Infrastructure;
 using Radio.Lib.Radio;
+using Radio.Lib.WebApi;
 using System;
 using System.Diagnostics;
 using System.Reactive;
@@ -31,7 +32,7 @@ namespace Radio.Lib {
       var webserver = await webserver_factory.CreateAsync().ConfigureAwait(false);
 
       var route_handler = new RestRouteHandler();
-      route_handler.RegisterController<RadioController>(model);
+      route_handler.RegisterController<RadioApiController>(model);
       webserver.RegisterRoute("api", route_handler);
 
       _disposables.Add(model.StopStream.Do(_ => Debug.WriteLine("model stop request")).Subscribe(_ => StopService()));
