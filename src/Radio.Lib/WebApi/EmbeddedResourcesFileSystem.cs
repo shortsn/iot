@@ -1,4 +1,5 @@
 ﻿using Devkoes.Restup.WebServer.File;
+using System;
 using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -21,9 +22,14 @@ namespace Radio.Lib.WebApi {
     }
 
     public Task<IFile> GetFileFromPathAsync(string path) {
-      var relative_filename = path.Substring(_absoluteBasePathUri.Length).Replace(Path.DirectorySeparatorChar, '.');
-      var resource_name = string.Concat(_root_namespace, relative_filename);
-      return Task.FromResult<IFile>(new EmbeddedResourceFile(_assembly, resource_name));
+      try {
+        var relative_filename = path.Substring(_absoluteBasePathUri.Length).Replace(Path.DirectorySeparatorChar, '.');
+        var resource_name = string.Concat(_root_namespace, relative_filename);
+        var file = new EmbeddedResourceFile(_assembly, resource_name);
+        return Task.FromResult<IFile>(file);
+      } catch (Exception ex) {
+        return Task.FromException<IFile>(ex);
+      }
     }
   }
 }
