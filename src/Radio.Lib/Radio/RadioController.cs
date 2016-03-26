@@ -1,77 +1,74 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Windows.Media.Playback;
 using Windows.Media.Core;
-using System.Threading;
 using System.Reactive.Subjects;
 using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Diagnostics;
-using System.Reactive.Threading.Tasks;
 using Radio.Lib.Input;
 using Radio.Lib.Infrastructure;
 using Radio.Lib.Display;
 using Radio.Lib.ShiftRegister;
 using Radio.Lib.AnalogDigitalConverter;
+using System.Threading.Tasks;
 
 namespace Radio.Lib.Radio {
-  public sealed class RadioViewModel : IRadioViewModel {
+  public sealed class RadioController : IRadioController {
 
     private bool _is_disposed = false;
 
-    IReadOnlyDictionary<int, IPushButton> PushButtons { get; }
-    IDisplay Display { get; }
-    IShiftRegister ShiftRegister { get; }
-    IAnalogDigitalConverter AnalogDigitalConverter { get; }
+    private IReadOnlyDictionary<int, IPushButton> _push_buttons;
+    private IDisplay _display;
+    private IShiftRegister _shift_register;
+    private IAnalogDigitalConverter _analog_digital_converter;
 
-    MediaPlayer Mediaplayer { get; }
-    MediaPlaybackList Playlist { get; }
+    private MediaPlayer _mediaplayer;
+    private MediaPlaybackList _playlist;
 
     private readonly Subject<Unit> _stop_subject = new Subject<Unit>();
+
     public IObservable<Unit> StopStream => _stop_subject.AsObservable();
 
-    CompositeDisposable Disposables { get; }
-    
-    public RadioViewModel(IFactory<IReadOnlyDictionary<int, IPushButton>> button_factory, IFactory<IDisplay> display_factory, IFactory<IShiftRegister> shift_register_factory, IFactory<IAnalogDigitalConverter> ad_converter_factory) {
-      Mediaplayer = BackgroundMediaPlayer.Current;
-      Playlist = new MediaPlaybackList();
+    private readonly CompositeDisposable _disposables = new CompositeDisposable();
 
-      InitPlaylist(Playlist);
-
-      Mediaplayer.AutoPlay = false;
-      Mediaplayer.Source = Playlist;
-
-      Disposables = new CompositeDisposable();
-
-      Disposables.Add(_stop_subject);
-
-      PushButtons = button_factory.CreateAsync().GetAwaiter().GetResult();
-
-      foreach (var button in PushButtons.Values) {
-        Disposables.Add(button);
-      }
-
-      Display = display_factory.CreateAsync().GetAwaiter().GetResult();
-      Disposables.Add(Display);
-      //display.PrintSymbol(0x00);
-
-      ShiftRegister = shift_register_factory.CreateAsync().GetAwaiter().GetResult();
-      Disposables.Add(ShiftRegister);
-
-      AnalogDigitalConverter = ad_converter_factory.CreateAsync().GetAwaiter().GetResult();
-      Disposables.Add(AnalogDigitalConverter);
-
-      InitializeSubscriptions();
+    public RadioController(IFactory<IReadOnlyDictionary<int, IPushButton>> button_factory, IFactory<IDisplay> display_factory, IFactory<IShiftRegister> shift_register_factory, IFactory<IAnalogDigitalConverter> ad_converter_factory) {
+      _disposables.Add(_stop_subject);
+      InitializeAsync(button_factory, display_factory, shift_register_factory, ad_converter_factory).GetAwaiter().GetResult();
+      CreateSubscriptions();
     }
 
-    private void InitializeSubscriptions() {
+    private async Task InitializeAsync(IFactory<IReadOnlyDictionary<int, IPushButton>> button_factory, IFactory<IDisplay> display_factory, IFactory<IShiftRegister> shift_register_factory, IFactory<IAnalogDigitalConverter> ad_converter_factory) {
+      _mediaplayer = BackgroundMediaPlayer.Current;
+      _playlist = new MediaPlaybackList();
 
-      foreach (var button in PushButtons.Values) {
-        Disposables.Add(
+      InitPlaylist(_playlist);
+
+      _mediaplayer.AutoPlay = false;
+      _mediaplayer.Source = _playlist;
+
+      _push_buttons = await button_factory.CreateAsync().ConfigureAwait(false);
+
+      foreach (var button in _push_buttons.Values) {
+        _disposables.Add(button);
+      }
+
+      _display = await display_factory.CreateAsync().ConfigureAwait(false);
+
+      _disposables.Add(_display);
+      //display.PrintSymbol(0x00);
+
+      _shift_register = await shift_register_factory.CreateAsync().ConfigureAwait(false);
+      _disposables.Add(_shift_register);
+
+      _analog_digital_converter = await ad_converter_factory.CreateAsync().ConfigureAwait(false);
+      _disposables.Add(_analog_digital_converter);
+    }
+
+    private void CreateSubscriptions() {
+      foreach (var button in _push_buttons.Values) {
+        _disposables.Add(
           button
             .StateStream
             .Subscribe(state => {
@@ -82,7 +79,7 @@ namespace Radio.Lib.Radio {
 
       var sequence = new byte[] { 0, 1, 3, 7, 15, 31 };
 
-      Disposables.Add(AnalogDigitalConverter
+      _disposables.Add(_analog_digital_converter
         .MonitorPorts(TimeSpan.FromMilliseconds(250), 0, 1, 2, 3, 4)
         .MapAndDistinct(value => {
           switch (value.Port) {
@@ -99,21 +96,21 @@ namespace Radio.Lib.Radio {
 
           switch (value.Port) {
             case 0:
-              Display.PrintLine(1, $"Volume: {value.Value.ToString("P0")}");
-              Mediaplayer.Volume = value.Value;
+              _display.PrintLine(1, $"Volume: {value.Value.ToString("P0")}");
+              _mediaplayer.Volume = value.Value;
               break;
             case 1:
               if (value.Value == 10) {
                 Stop();
               } else
-                Mediaplayer.Play();
+                _mediaplayer.Play();
               break;
             case 3:
               var index = (uint)value.Value;
-              ShiftRegister.SendByte(sequence[index]);
-              Playlist.MoveTo(index);
-              var item = Playlist.Items[(int)index];
-              Display.PrintLine(0, item.Source.CustomProperties["Name"].ToString());
+              _shift_register.SendByte(sequence[index]);
+              _playlist.MoveTo(index);
+              var item = _playlist.Items[(int)index];
+              _display.PrintLine(0, item.Source.CustomProperties["Name"].ToString());
               break;
           }
         },
@@ -143,7 +140,7 @@ namespace Radio.Lib.Radio {
     void Dispose(bool disposing) {
       if (!_is_disposed) {
         if (disposing) {
-          Disposables.Dispose();
+          _disposables.Dispose();
         }
         _is_disposed = true;
       }

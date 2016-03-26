@@ -10,6 +10,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using Radio.Lib.Radio;
+using Radio.Lib;
+using Devkoes.Restup.WebServer.Http;
 
 namespace Radio.App {
   internal static class Bootstrapper {
@@ -22,7 +24,11 @@ namespace Radio.App {
       container.RegisterFactory<IShiftRegister>(async cancellation_token => await SR_74HC595N.ConnectAsync().ConfigureAwait(false));
       container.RegisterFactory<IAnalogDigitalConverter>(async cancellation_token => await ADC_MCP3008_SPI.ConnectAsync().ConfigureAwait(false));
       container.RegisterFactory<IReadOnlyDictionary<int, IPushButton>>(async cancellation_token => await InitializeButtons().ConfigureAwait(false));
-      container.Register<IRadioViewModel, RadioViewModel>(Reuse.Singleton);
+
+      container.Register<IRadioController, RadioController>(Reuse.Singleton);
+      container.Register<IRadioService, RadioService>(Reuse.Singleton);
+      
+      container.RegisterFactory(_ => Task.FromResult(new HttpServer(8888)));
 
       return container;
     }

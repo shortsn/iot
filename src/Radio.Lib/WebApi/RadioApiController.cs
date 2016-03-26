@@ -5,11 +5,11 @@ using System;
 namespace Radio.Lib.WebApi {
   
   [RestController(InstanceCreationType.Singleton)]
-  public sealed class RadioController {
+  public sealed class RadioApiController {
 
     private readonly string _test;
 
-    public RadioController(string test) {
+    public RadioApiController(string test) {
       _test = test;
     }
 

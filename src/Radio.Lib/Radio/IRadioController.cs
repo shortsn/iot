@@ -2,7 +2,7 @@
 using System.Reactive;
 
 namespace Radio.Lib.Radio {
-  public interface IRadioViewModel : IDisposable {
+  public interface IRadioController : IDisposable {
     void Stop();
     IObservable<Unit> StopStream { get; }
   }
