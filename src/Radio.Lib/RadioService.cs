@@ -9,7 +9,6 @@ using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace Radio.Lib {
@@ -36,12 +35,14 @@ namespace Radio.Lib {
       webserver.RegisterRoute("api", route_handler);
 
       _disposables.Add(model.StopStream.Do(_ => Debug.WriteLine("model stop request")).Subscribe(_ => StopService()));
-      _stop_subject.Do(_ => Debug.WriteLine("service stopping")).Subscribe(_ => webserver.StopServer(), webserver.StopServer);
 
+      Debug.WriteLine("starting webserver");
       await webserver.StartServerAsync().ConfigureAwait(false);
       Debug.WriteLine("service started");
 
-      await _stop_subject.FirstAsync();
+      await _stop_subject.FirstOrDefaultAsync();
+      Debug.WriteLine("service stopping");
+      webserver.StopServer();
       Debug.WriteLine("service stopped");
     }
 
@@ -56,6 +57,7 @@ namespace Radio.Lib {
     void Dispose(bool disposing) {
       if (!_disposed) {
         if (disposing) {
+          _stop_subject.OnCompleted();
           _disposables.Dispose();
         }
         _disposed = true;

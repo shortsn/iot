@@ -32,8 +32,11 @@ namespace Radio.Lib.Radio {
     public IObservable<Unit> StopStream => _stop_subject.AsObservable();
 
     private readonly CompositeDisposable _disposables = new CompositeDisposable();
+    private readonly CompositeDisposable _subscriptions = new CompositeDisposable();
 
     public RadioController(IFactory<IReadOnlyDictionary<int, IPushButton>> button_factory, IFactory<IDisplay> display_factory, IFactory<IShiftRegister> shift_register_factory, IFactory<IAnalogDigitalConverter> ad_converter_factory) {
+      // active subscriptions should be destroyed first
+      _disposables.Add(_subscriptions);
       _disposables.Add(_stop_subject);
       InitializeAsync(button_factory, display_factory, shift_register_factory, ad_converter_factory).GetAwaiter().GetResult();
       CreateSubscriptions();
@@ -68,7 +71,7 @@ namespace Radio.Lib.Radio {
 
     private void CreateSubscriptions() {
       foreach (var button in _push_buttons.Values) {
-        _disposables.Add(
+        _subscriptions.Add(
           button
             .StateStream
             .Subscribe(state => {
@@ -79,7 +82,7 @@ namespace Radio.Lib.Radio {
 
       var sequence = new byte[] { 0, 1, 3, 7, 15, 31 };
 
-      _disposables.Add(_analog_digital_converter
+      _subscriptions.Add(_analog_digital_converter
         .MonitorPorts(TimeSpan.FromMilliseconds(250), 0, 1, 2, 3, 4)
         .MapAndDistinct(value => {
           switch (value.Port) {
@@ -140,6 +143,7 @@ namespace Radio.Lib.Radio {
     void Dispose(bool disposing) {
       if (!_is_disposed) {
         if (disposing) {
+          _stop_subject.OnCompleted();
           _disposables.Dispose();
         }
         _is_disposed = true;
