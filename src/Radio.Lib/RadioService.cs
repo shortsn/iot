@@ -1,4 +1,5 @@
-﻿using Devkoes.Restup.WebServer.Http;
+﻿using Devkoes.Restup.WebServer.File;
+using Devkoes.Restup.WebServer.Http;
 using Devkoes.Restup.WebServer.Rest;
 using Radio.Lib.Infrastructure;
 using Radio.Lib.Radio;
@@ -9,6 +10,7 @@ using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace Radio.Lib {
@@ -17,11 +19,9 @@ namespace Radio.Lib {
     private bool _disposed = false;
 
     private CompositeDisposable _disposables = new CompositeDisposable();
-
     private readonly Lazy<Task> _initializer;
-    
     private readonly Subject<Unit> _stop_subject = new Subject<Unit>();
-
+    
     public RadioService(IRadioController model, IFactory<HttpServer> webserver_factory) {
       _disposables.Add(_stop_subject);
       _initializer = new Lazy<Task>(() => InitializeServiceAsync(model, webserver_factory), true);
@@ -32,7 +32,9 @@ namespace Radio.Lib {
 
       var route_handler = new RestRouteHandler();
       route_handler.RegisterController<RadioApiController>(model);
+
       webserver.RegisterRoute("api", route_handler);
+      webserver.RegisterRoute(string.Empty, new StaticFileRouteHandler(string.Empty, new EmbeddedResourcesFileSystem(GetType().GetTypeInfo().Assembly, "Radio.Lib.WebApi.Files")));
 
       _disposables.Add(model.StopStream.Do(_ => Debug.WriteLine("model stop request")).Subscribe(_ => StopService()));
 

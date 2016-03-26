@@ -13,7 +13,7 @@ namespace Radio.Lib.WebApi {
     public RadioApiController(IRadioController model) {
       _model = model;
     }
-
+    
     [UriFormat("/radio")]
     public GetResponse GETRadio()
       => new GetResponse(GetResponse.ResponseStatus.OK, "foobar");
