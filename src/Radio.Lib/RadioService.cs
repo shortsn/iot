@@ -33,8 +33,8 @@ namespace Radio.Lib {
       var route_handler = new RestRouteHandler();
       route_handler.RegisterController<RadioApiController>(model);
 
+      webserver.RegisterRoute(string.Empty, new StaticFileRouteHandler("Site", new WebApi.PhysicalFileSystem()));
       webserver.RegisterRoute("api", route_handler);
-      webserver.RegisterRoute(string.Empty, new StaticFileRouteHandler("", new RedirectedPhysicalFileSystem("Site")));
 
       _disposables.Add(model.StopStream.Do(_ => Debug.WriteLine("model stop request")).Subscribe(_ => StopService()));
 

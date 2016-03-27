@@ -28,7 +28,7 @@ namespace Radio.App {
       container.Register<IRadioController, RadioController>(Reuse.Singleton);
       container.Register<IRadioService, RadioService>(Reuse.Singleton);
       
-      container.RegisterFactory(_ => Task.FromResult(new HttpServer(8888)));
+      container.RegisterFactory(_ => Task.FromResult(new HttpServer(80)));
 
       return container;
     }
