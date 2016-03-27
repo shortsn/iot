@@ -1,0 +1,98 @@
+---
+swagger: '2.0'
+
+info:
+  version: v1
+  title: Radio API
+  description: |
+  
+################################################################################
+#    Host, Base Path, Schemes and Content Types                                #
+################################################################################
+host: radio
+basePath: api/v1
+schemes:
+  - http
+produces:
+  - application/json
+consumes:
+  - application/json
+
+################################################################################
+#    Paths                                                                     #
+################################################################################
+paths:
+  /token:
+  
+    post:
+      summary: create new
+      description: Create a new Token
+      responses:
+        "200":
+          schema:
+            $ref: '#/definitions/token'
+            
+    get:
+      summary: list all
+      description: Gets an array of all existing Tokens.
+      responses:
+        "200":
+          schema:
+            $ref: '#/definitions/tokens'
+            
+  /token/{token-id}:
+  
+    get:
+      summary: get by id
+      description: Gets a Token by Id.
+      responses:
+        "200":
+          description: Token found
+          schema:
+            $ref: '#/definitions/token'
+        "404":
+          description: Token does not exist
+          schema:
+            $ref: '#/definitions/error'
+            
+    delete:
+      summary: delete by id
+      description: Deletes a Token by Id.
+      responses:
+        "200":
+          description: Token deleted
+        "404":
+          description: Token does not exist
+          schema:
+            $ref: '#/definitions/error'
+
+################################################################################
+#    Definitions                                                               #
+################################################################################
+definitions:
+
+  token:
+    required:
+      - id
+      - authorized
+    properties:
+      id:
+        type: string
+      authorized:
+        type: bool
+        
+  tokens:
+    type: array
+    items:
+      $ref: '#/definitions/token'
+      
+  error:
+    required:
+      - code
+      - message
+    properties:
+      code:
+        type: integer
+        format: int32
+      message:
+        type: string
