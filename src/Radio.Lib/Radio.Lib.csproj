@@ -126,9 +126,9 @@
     <Compile Include="ShiftRegister\IShiftRegister.cs" />
     <Compile Include="ShiftRegister\SR_74HC595N.cs" />
     <Compile Include="IRadioService.cs" />
-    <Compile Include="WebApi\EmbeddedResourceFile.cs" />
-    <Compile Include="WebApi\EmbeddedResourcesFileSystem.cs" />
     <Compile Include="WebApi\MimeTypeHelper.cs" />
+    <Compile Include="WebApi\PhysicalFile.cs" />
+    <Compile Include="WebApi\PhysicalFileSystem.cs" />
     <Compile Include="WebApi\RadioApiController.cs" />
     <EmbeddedResource Include="Properties\Radio.Lib.rd.xml" />
   </ItemGroup>
@@ -136,9 +136,6 @@
     <SDKReference Include="WindowsIoT, Version=10.0.10586.0">
       <Name>Windows IoT Extensions for the UWP</Name>
     </SDKReference>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="WebApi\Files\index.html" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
