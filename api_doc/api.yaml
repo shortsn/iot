@@ -3,14 +3,14 @@ swagger: '2.0'
 
 info:
   version: v1
-  title: Radio API
+  title: iot-radio API
   description: |
   
 ################################################################################
 #    Host, Base Path, Schemes and Content Types                                #
 ################################################################################
-host: radio
-basePath: api/v1
+
+basePath: /api/v1
 schemes:
   - http
 produces:
@@ -41,7 +41,7 @@ paths:
             $ref: '#/definitions/tokens'
             
   /token/{token-id}:
-  
+
     get:
       summary: get by id
       description: Gets a Token by Id.
@@ -65,10 +65,26 @@ paths:
           description: Token does not exist
           schema:
             $ref: '#/definitions/error'
+            
+  /{token-id}:
+
+    delete:
+      summary: delete by id
+      description: Deletes a Token by Id.
+      responses:
+        "401":
+          description: Token is not authenticated
+          schema:
+            $ref: '#/definitions/error'
+        "403":
+          description: Token is not permitted to execute the operation
+          schema:
+            $ref: '#/definitions/error'
 
 ################################################################################
 #    Definitions                                                               #
 ################################################################################
+
 definitions:
 
   token:
@@ -78,8 +94,9 @@ definitions:
     properties:
       id:
         type: string
+        format: uuid
       authorized:
-        type: bool
+        type: boolean
         
   tokens:
     type: array

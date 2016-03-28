@@ -3,11 +3,11 @@
 <head>
     <link rel="stylesheet" href="main.css">
     <meta charset="UTF-8">
-    <title>Radio API</title>
+    <title>iot-radio API</title>
 </head>
 <body>
 <div class="container">
-    <h1>Radio API</h1>
+    <h1>iot-radio API</h1>
     <p></p>
     
         <div id="sw-default-consumes" class="sw-default-value">
@@ -73,6 +73,18 @@
                         </td>
                         <td>
                             <p>get by id</p>
+        
+                        </td>
+                    </tr>
+                    <tr>
+                            <td class="swagger--summary-path" rowspan="1">
+                                <a href="#path---token-id-">/{token-id}</a>
+                            </td>
+                        <td>
+                            <a href="#operation---token-id--delete">DELETE</a>
+                        </td>
+                        <td>
+                            <p>delete by id</p>
         
                         </td>
                     </tr>
@@ -291,6 +303,71 @@
                             </dl>
                         </section>
                 </div>
+            </div>    
+        <span id="path---token-id-"></span>
+            <div id="operation---token-id--delete" class="swagger--panel-operation-delete panel">
+                <div class="panel-heading">
+                    <div class="operation-summary">delete by id</div>
+                    <h3 class="panel-title"><span class="operation-name">DELETE</span> <strong>/{token-id}</strong></h3>
+                </div>
+                <div class="panel-body">
+                    <section class="sw-operation-description">
+                        <p>Deletes a Token by Id.</p>
+            
+                    </section>
+                    
+                    
+                        <section class="sw-responses">
+                                <p><a href="#sw-default-produces">Uses default content-types: </a>
+                                    <span class="label label-default">application/json</span> 
+                                </p>
+                            
+                            <dl>
+                                    <dt class="sw-response-401">
+                                        401 Unauthorized
+                                    
+                                    </dt>
+                                    <dd class="sw-response-401">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <p>Token is not authenticated</p>
+                                            
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                
+                                                <div class="col-md-6 sw-response-model">
+                                                <div  class="panel panel-definition">
+                                                    <div class="panel-body">
+                                                                <a class="json-schema-ref" href="#/definitions/error">error</a>
+                                                    </div>
+                                                </div></div>
+                                            
+                                            </div>                </dd>
+                                    <dt class="sw-response-403">
+                                        403 Forbidden
+                                    
+                                    </dt>
+                                    <dd class="sw-response-403">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <p>Token is not permitted to execute the operation</p>
+                                            
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                
+                                                <div class="col-md-6 sw-response-model">
+                                                <div  class="panel panel-definition">
+                                                    <div class="panel-body">
+                                                                <a class="json-schema-ref" href="#/definitions/error">error</a>
+                                                    </div>
+                                                </div></div>
+                                            
+                                            </div>                </dd>
+                            </dl>
+                        </section>
+                </div>
             </div>
      
     
@@ -356,7 +433,7 @@
                                     <dl>
                                             <dt data-property-name="id">
                                                 <span class="json-property-name">id:</span>
-                                                <span class="json-property-type">string</span>
+                                                <span class="json-property-type">string</span>    <span class="json-property-format">(uuid)</span>
                                                 <span class="json-property-range" title="Value limits"></span>
                                                 
                                                     <span class="json-property-required"></span>
@@ -369,7 +446,7 @@
                                             </dd>
                                             <dt data-property-name="authorized">
                                                 <span class="json-property-name">authorized:</span>
-                                                <span class="json-property-type">bool</span>
+                                                <span class="json-property-type">boolean</span>
                                                 <span class="json-property-range" title="Value limits"></span>
                                                 
                                                     <span class="json-property-required"></span>
