@@ -1,11 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Radio.Lib", "src\Radio.Lib\Radio.Lib.csproj", "{5FFCC012-E1BC-4C8B-806E-F0CC488216BF}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Radio.App", "src\Radio.App\Radio.App.csproj", "{72422D97-B348-494F-918E-6A8A1E78AC61}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Radio.Lib.iot", "src\Radio.Lib.iot\Radio.Lib.iot.csproj", "{DC150135-6511-4767-BCDE-BCA43AF53B37}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Radio.Desktop", "src\Radio.Desktop\Radio.Desktop.csproj", "{1C0D7E35-E2F1-4018-B826-65CF57C2BD40}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -43,8 +47,6 @@ Global
 		{72422D97-B348-494F-918E-6A8A1E78AC61}.Debug|x64.Build.0 = Debug|x64
 		{72422D97-B348-494F-918E-6A8A1E78AC61}.Debug|x64.Deploy.0 = Debug|x64
 		{72422D97-B348-494F-918E-6A8A1E78AC61}.Debug|x86.ActiveCfg = Debug|x86
-		{72422D97-B348-494F-918E-6A8A1E78AC61}.Debug|x86.Build.0 = Debug|x86
-		{72422D97-B348-494F-918E-6A8A1E78AC61}.Debug|x86.Deploy.0 = Debug|x86
 		{72422D97-B348-494F-918E-6A8A1E78AC61}.Release|Any CPU.ActiveCfg = Release|x86
 		{72422D97-B348-494F-918E-6A8A1E78AC61}.Release|ARM.ActiveCfg = Release|ARM
 		{72422D97-B348-494F-918E-6A8A1E78AC61}.Release|ARM.Build.0 = Release|ARM
@@ -55,6 +57,39 @@ Global
 		{72422D97-B348-494F-918E-6A8A1E78AC61}.Release|x86.ActiveCfg = Release|x86
 		{72422D97-B348-494F-918E-6A8A1E78AC61}.Release|x86.Build.0 = Release|x86
 		{72422D97-B348-494F-918E-6A8A1E78AC61}.Release|x86.Deploy.0 = Release|x86
+		{DC150135-6511-4767-BCDE-BCA43AF53B37}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DC150135-6511-4767-BCDE-BCA43AF53B37}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DC150135-6511-4767-BCDE-BCA43AF53B37}.Debug|ARM.ActiveCfg = Debug|ARM
+		{DC150135-6511-4767-BCDE-BCA43AF53B37}.Debug|ARM.Build.0 = Debug|ARM
+		{DC150135-6511-4767-BCDE-BCA43AF53B37}.Debug|x64.ActiveCfg = Debug|x64
+		{DC150135-6511-4767-BCDE-BCA43AF53B37}.Debug|x64.Build.0 = Debug|x64
+		{DC150135-6511-4767-BCDE-BCA43AF53B37}.Debug|x86.ActiveCfg = Debug|x86
+		{DC150135-6511-4767-BCDE-BCA43AF53B37}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DC150135-6511-4767-BCDE-BCA43AF53B37}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DC150135-6511-4767-BCDE-BCA43AF53B37}.Release|ARM.ActiveCfg = Release|ARM
+		{DC150135-6511-4767-BCDE-BCA43AF53B37}.Release|ARM.Build.0 = Release|ARM
+		{DC150135-6511-4767-BCDE-BCA43AF53B37}.Release|x64.ActiveCfg = Release|x64
+		{DC150135-6511-4767-BCDE-BCA43AF53B37}.Release|x64.Build.0 = Release|x64
+		{DC150135-6511-4767-BCDE-BCA43AF53B37}.Release|x86.ActiveCfg = Release|x86
+		{DC150135-6511-4767-BCDE-BCA43AF53B37}.Release|x86.Build.0 = Release|x86
+		{1C0D7E35-E2F1-4018-B826-65CF57C2BD40}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{1C0D7E35-E2F1-4018-B826-65CF57C2BD40}.Debug|ARM.ActiveCfg = Debug|ARM
+		{1C0D7E35-E2F1-4018-B826-65CF57C2BD40}.Debug|x64.ActiveCfg = Debug|x64
+		{1C0D7E35-E2F1-4018-B826-65CF57C2BD40}.Debug|x64.Build.0 = Debug|x64
+		{1C0D7E35-E2F1-4018-B826-65CF57C2BD40}.Debug|x64.Deploy.0 = Debug|x64
+		{1C0D7E35-E2F1-4018-B826-65CF57C2BD40}.Debug|x86.ActiveCfg = Debug|x86
+		{1C0D7E35-E2F1-4018-B826-65CF57C2BD40}.Debug|x86.Build.0 = Debug|x86
+		{1C0D7E35-E2F1-4018-B826-65CF57C2BD40}.Debug|x86.Deploy.0 = Debug|x86
+		{1C0D7E35-E2F1-4018-B826-65CF57C2BD40}.Release|Any CPU.ActiveCfg = Release|x86
+		{1C0D7E35-E2F1-4018-B826-65CF57C2BD40}.Release|ARM.ActiveCfg = Release|ARM
+		{1C0D7E35-E2F1-4018-B826-65CF57C2BD40}.Release|ARM.Build.0 = Release|ARM
+		{1C0D7E35-E2F1-4018-B826-65CF57C2BD40}.Release|ARM.Deploy.0 = Release|ARM
+		{1C0D7E35-E2F1-4018-B826-65CF57C2BD40}.Release|x64.ActiveCfg = Release|x64
+		{1C0D7E35-E2F1-4018-B826-65CF57C2BD40}.Release|x64.Build.0 = Release|x64
+		{1C0D7E35-E2F1-4018-B826-65CF57C2BD40}.Release|x64.Deploy.0 = Release|x64
+		{1C0D7E35-E2F1-4018-B826-65CF57C2BD40}.Release|x86.ActiveCfg = Release|x86
+		{1C0D7E35-E2F1-4018-B826-65CF57C2BD40}.Release|x86.Build.0 = Release|x86
+		{1C0D7E35-E2F1-4018-B826-65CF57C2BD40}.Release|x86.Deploy.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -8,9 +8,9 @@ namespace Radio.Lib.WebApi {
   [RestController(InstanceCreationType.Singleton)]
   public sealed class RadioApiController {
 
-    private readonly IRadioController _model;
+    private readonly IRadioApi _model;
 
-    public RadioApiController(IRadioController model) {
+    public RadioApiController(IRadioApi model) {
       _model = model;
     }
     

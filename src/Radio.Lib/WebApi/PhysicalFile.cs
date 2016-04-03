@@ -19,6 +19,5 @@ namespace Radio.Lib.WebApi {
 
     public Task<Stream> OpenStreamForReadAsync() =>
       _storage_file.OpenStreamForReadAsync();
-
   }
 }

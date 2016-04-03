@@ -25,7 +25,7 @@ namespace Radio.App {
       container.RegisterFactory<IAnalogDigitalConverter>(async cancellation_token => await ADC_MCP3008_SPI.ConnectAsync().ConfigureAwait(false));
       container.RegisterFactory<IReadOnlyDictionary<int, IPushButton>>(async cancellation_token => await InitializeButtons().ConfigureAwait(false));
 
-      container.Register<IRadioController, RadioController>(Reuse.Singleton);
+      container.Register<IRadioApi, RadioController>(Reuse.Singleton);
       container.Register<IRadioService, RadioService>(Reuse.Singleton);
       
       container.RegisterFactory(_ => Task.FromResult(new HttpServer(80)));

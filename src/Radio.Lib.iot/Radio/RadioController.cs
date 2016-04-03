@@ -15,7 +15,7 @@ using Radio.Lib.AnalogDigitalConverter;
 using System.Threading.Tasks;
 
 namespace Radio.Lib.Radio {
-  public sealed class RadioController : IRadioController {
+  public sealed class RadioController : IRadioApi {
 
     private bool _is_disposed = false;
 
