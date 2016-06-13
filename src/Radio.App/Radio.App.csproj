@@ -100,6 +100,7 @@
       <Link>Site\doc\main.css.map</Link>
     </Content>
     <None Include="project.json" />
+    <None Include="Radio.App_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Bootstrapper.cs" />
@@ -110,7 +111,6 @@
     <AppxManifest Include="Package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
-    <None Include="Radio.App_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="..\..\api_doc\index.html">
@@ -143,9 +143,9 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Radio.Lib.iot\Radio.Lib.iot.csproj">
+    <ProjectReference Include="..\iot.lib\iot.lib.csproj">
       <Project>{dc150135-6511-4767-bcde-bca43af53b37}</Project>
-      <Name>Radio.Lib.iot</Name>
+      <Name>iot.lib</Name>
     </ProjectReference>
     <ProjectReference Include="..\Radio.Lib\Radio.Lib.csproj">
       <Project>{5ffcc012-e1bc-4c8b-806e-f0cc488216bf}</Project>
@@ -160,6 +160,10 @@
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

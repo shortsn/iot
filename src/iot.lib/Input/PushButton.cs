@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Windows.Devices.Gpio;
 using Windows.Foundation;
 
-namespace Radio.Lib.Input {
+namespace iot.lib.Input {
   public sealed class PushButton : IPushButton {
 
     private bool _disposed = false;

@@ -12,7 +12,7 @@
     <DefaultLanguage>de-DE</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
     <TargetPlatformVersion>10.0.10586.0</TargetPlatformVersion>
-    <TargetPlatformMinVersion>10.0.10240.0</TargetPlatformMinVersion>
+    <TargetPlatformMinVersion>10.0.10586.0</TargetPlatformMinVersion>
     <MinimumVisualStudioVersion>14</MinimumVisualStudioVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -116,11 +116,18 @@
     <Compile Include="Radio\PlaylistItem.cs" />
     <Compile Include="IRadioService.cs" />
     <Compile Include="Radio\MediaPlayer.cs" />
+    <Compile Include="Radio\RadioController.cs" />
     <Compile Include="WebApi\MimeTypeHelper.cs" />
     <Compile Include="WebApi\PhysicalFile.cs" />
     <Compile Include="WebApi\PhysicalFileSystem.cs" />
     <Compile Include="WebApi\RadioApiController.cs" />
     <EmbeddedResource Include="Properties\Radio.Lib.rd.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\iot.lib\iot.lib.csproj">
+      <Project>{dc150135-6511-4767-bcde-bca43af53b37}</Project>
+      <Name>iot.lib</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

@@ -1,5 +1,5 @@
 ﻿
-namespace Radio.Lib.AnalogDigitalConverter {
+namespace iot.lib.AnalogDigitalConverter {
   public struct PortValue<TValue> {
     public byte Port { get; }
     public TValue Value { get; }

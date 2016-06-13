@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Radio.Lib.Display {
+namespace iot.lib.Display {
   public interface IDisplay : IDisposable {
     byte LineCount { get; }
     byte CharCount { get; }

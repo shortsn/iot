@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Radio.Lib.Input {
+namespace iot.lib.Input {
   public interface IPushButton : IDisposable {
     int Id { get; }
     IObservable<bool> StateStream { get; }

@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Windows.Devices.Gpio;
 
-namespace Radio.Lib.ShiftRegister {
+namespace iot.lib.ShiftRegister {
   public sealed class SR_74HC595N : IShiftRegister {
 
     private bool _disposed = false;

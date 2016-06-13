@@ -7,11 +7,11 @@ using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Diagnostics;
-using Radio.Lib.Input;
+using iot.lib.Input;
 using Radio.Lib.Infrastructure;
-using Radio.Lib.Display;
-using Radio.Lib.ShiftRegister;
-using Radio.Lib.AnalogDigitalConverter;
+using iot.lib.Display;
+using iot.lib.ShiftRegister;
+using iot.lib.AnalogDigitalConverter;
 using System.Threading.Tasks;
 
 namespace Radio.Lib.Radio {

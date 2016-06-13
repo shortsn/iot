@@ -7,12 +7,12 @@
     <ProjectGuid>{DC150135-6511-4767-BCDE-BCA43AF53B37}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Radio.Lib</RootNamespace>
-    <AssemblyName>Radio.Lib.iot</AssemblyName>
+    <RootNamespace>iot.lib</RootNamespace>
+    <AssemblyName>iot.lib</AssemblyName>
     <DefaultLanguage>de-DE</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
     <TargetPlatformVersion>10.0.10586.0</TargetPlatformVersion>
-    <TargetPlatformMinVersion>10.0.10240.0</TargetPlatformMinVersion>
+    <TargetPlatformMinVersion>10.0.10586.0</TargetPlatformMinVersion>
     <MinimumVisualStudioVersion>14</MinimumVisualStudioVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -116,7 +116,6 @@
     <Compile Include="Input\IPushButton.cs" />
     <Compile Include="Input\PushButton.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Radio\RadioController.cs" />
     <Compile Include="ShiftRegister\IShiftRegister.cs" />
     <Compile Include="ShiftRegister\SR_74HC595N.cs" />
     <EmbeddedResource Include="Properties\Radio.Media.rd.xml" />
@@ -125,12 +124,6 @@
     <SDKReference Include="WindowsIoT, Version=10.0.10586.0">
       <Name>Windows IoT Extensions for the UWP</Name>
     </SDKReference>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Radio.Lib\Radio.Lib.csproj">
-      <Project>{5ffcc012-e1bc-4c8b-806e-f0cc488216bf}</Project>
-      <Name>Radio.Lib</Name>
-    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

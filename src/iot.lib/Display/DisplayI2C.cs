@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Windows.Devices.Enumeration;
 using Windows.Devices.I2c;
 
-namespace Radio.Lib.Display {
+namespace iot.lib.Display {
   public sealed class Display_16x2_I2C : IDisplay {
 
     private const byte LCD_WRITE = 0x07;

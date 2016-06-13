@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Radio.Lib.AnalogDigitalConverter {
+namespace iot.lib.AnalogDigitalConverter {
   public interface IAnalogDigitalConverter : IDisposable {
     int Resolution { get; }
     int ReadValue(byte channel);

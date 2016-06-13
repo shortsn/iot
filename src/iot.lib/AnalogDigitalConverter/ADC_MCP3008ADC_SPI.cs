@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Windows.Devices.Enumeration;
 using Windows.Devices.Spi;
 
-namespace Radio.Lib.AnalogDigitalConverter {
+namespace iot.lib.AnalogDigitalConverter {
   public sealed class ADC_MCP3008_SPI : IAnalogDigitalConverter {
 
     public int Resolution { get; } = 1024;
